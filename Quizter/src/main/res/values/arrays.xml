@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="navigationOptions">
+        <item name="profile">Profile</item>
+        <item name="quiz_me">Quiz Me</item>
+        <item name="leaderboard">Leaderboard</item>
+        <item name="settings">Settings</item>
+        <item name="signout">Sign Out</item>
+
+    </array>
+</resources>

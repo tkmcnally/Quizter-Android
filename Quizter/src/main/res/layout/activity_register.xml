@@ -1,0 +1,72 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/containerRegisterActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NavDrawerActivity"
+    tools:ignore="MergeRootFrame"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <it.gmariotti.cardslib.library.view.CardListView
+            android:id="@+id/questionListView"
+            card:list_card_layout_resourceID="@layout/profile_list_card_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:smoothScrollbar="true"
+            android:clickable="true"
+            android:layout_weight="3"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:paddingTop="5dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="0">
+            <View
+                android:id="@+id/dividerView"
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:background="#27ae60"
+                android:layout_alignParentTop="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+
+                <Button
+                    android:id="@+id/saveProfileButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="?android:attr/borderlessButtonStyle"/>
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="@string/save"
+                    android:clickable="false"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/save"
+                    android:src="@drawable/cloud"
+                    android:scaleType="centerCrop"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+

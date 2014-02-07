@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="QuizterTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/QuizterActionBarTheme</item>
+        <item name="android:actionBarTabTextStyle">@style/QuizterActionBarText</item>
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:colorBackground">#ecf0f1</item>
+        <item name="android:actionMenuTextAppearance">@style/QuizterActionBarMenuStyle</item>
+
+    </style>
+
+    <style name="QuizterActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#27ae60</item>
+        <item name="android:titleTextStyle">@style/QuizterActionBarTitleText</item>
+        <item name="android:subtitleTextStyle">@style/QuizterActionBarSubTitleText</item>
+        <item name="android:actionMenuTextColor">#ecf0f1</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="QuizterActionBarTitleText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#ecf0f1</item>
+    </style>
+
+    <style name="QuizterActionBarSubTitleText" parent="android:TextAppearance.Holo.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">#ecf0f1</item>
+    </style>
+
+    <!-- ActionBar tabs text styles -->
+    <style name="QuizterActionBarText" parent="android:Widget.Holo.Light.ActionBar.TabText">
+        <item name="android:textColor">#ecf0f1</item>
+    </style>
+
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="QuizterActionBarMenuStyle" parent="android:TextAppearance.Holo.Widget.ActionBar.Menu">
+        <item name="android:actionMenuTextColor">#ecf0f1</item>
+        <item name="android:textColor">#ecf0f1</item>
+    </style>
+
+</resources>

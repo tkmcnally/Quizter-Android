@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="card_now_profile_title">@android:color/holo_blue_dark</color>
+    <color name="card_now_profile_header_color">#707070</color>
+    <color name="quizter_theme_color">#27ae60</color>
+
+</resources>

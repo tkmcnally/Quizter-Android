@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    style="@style/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- This is the base Inner View inside a CardHeader.
+         You can customize it with your layout xml file and your CardHeader.
+         You can popolate your element with CardHeader#setupInnerViewElements() method -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_card_name"
+        android:textSize="24sp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/card_now_profile_header_color"
+        android:singleLine="false"
+        android:lines="2"
+        />
+<!--
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/card_now_profile_header_color"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/profile_card_date_created"
+        android:textSize="14sp"
+        />
+-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/card_now_profile_header_color"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/profile_card_score"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <ImageView
+            android:layout_width="64px"
+            android:layout_height="64px"
+            android:paddingLeft="5dp"
+            android:id="@+id/profile_card_score_star"/>
+    </LinearLayout>
+
+</LinearLayout>
