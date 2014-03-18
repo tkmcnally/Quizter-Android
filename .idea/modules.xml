@@ -4,9 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Quizter/Quizter.iml" filepath="$PROJECT_DIR$/Quizter/Quizter.iml" />
       <module fileurl="file://$PROJECT_DIR$/QuizterProject.iml" filepath="$PROJECT_DIR$/QuizterProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/cardslib-master/cardslib-master.iml" filepath="$PROJECT_DIR$/libraries/cardslib-master/cardslib-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/facebook/facebook.iml" filepath="$PROJECT_DIR$/libraries/facebook/facebook.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/libraries.iml" filepath="$PROJECT_DIR$/libraries/libraries.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/cardslib-master/library/library.iml" filepath="$PROJECT_DIR$/libraries/cardslib-master/library/library.iml" />
     </modules>
   </component>

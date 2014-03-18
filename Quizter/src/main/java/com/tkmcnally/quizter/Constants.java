@@ -37,7 +37,11 @@ public class Constants {
 
     public static String FETCH_PLAYER_API_PATH = "http://quizter.tkmcnally.com/api/android/facebook/fetchplayer";
 
+    public static String FETCH_PLAYER_QUESTIONS_API_PATH = "http://quizter.tkmcnally.com/api/android/facebook/getplayersquestions";
+
     public static String STRING_PLAYER_INDEX = "player_index";
+
+    public static String STRING_PLAYER_ID = "player_id";
 
     public static class Config {
         public static final boolean DEVELOPER_MODE = false;

@@ -4,5 +4,6 @@
     <color name="card_now_profile_title">@android:color/holo_blue_dark</color>
     <color name="card_now_profile_header_color">#707070</color>
     <color name="quizter_theme_color">#27ae60</color>
+    <color name="quizter_theme_background">#ecf0f1</color>
 
 </resources>

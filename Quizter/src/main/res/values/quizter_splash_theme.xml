@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="QuizterSplashTheme" parent="@android:style/Theme">
+        <item name="android:windowBackground">@color/quizter_theme_color</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="noAnimTheme" parent="android:Theme">
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowBackground">@color/quizter_theme_color</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

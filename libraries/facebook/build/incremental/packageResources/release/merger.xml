@@ -794,6 +794,7 @@ center
             </file>
         </source>
         <source path="C:\Dev\QuizterProject\libraries\facebook\build\res\rs\release" />
+        <source path="C:\Dev\QuizterProject\libraries\facebook\build\res\generated\release" />
     </dataSet>
     <dataSet config="release" >
         <source path="C:\Dev\QuizterProject\libraries\facebook\src\release\res" />

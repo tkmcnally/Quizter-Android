@@ -23,7 +23,7 @@
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal|bottom"
                 android:textSize="40dp"
-                android:textColor="#27ae60" />
+                android:textColor="@color/quizter_theme_background" />
         </LinearLayout>
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,9 +43,5 @@
                 />
 
         </LinearLayout>
-
-
-
-
     </RelativeLayout>
 </FrameLayout>

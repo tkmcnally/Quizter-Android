@@ -76,8 +76,6 @@ public class QuestionSelectionFragment extends Fragment implements WebServiceCal
 
         questionList = new ArrayList<String>();
 
-
-
         adapter = new ImageListAdapter(this.getActivity(),
                 R.layout.question_search_items, R.id.question_search_item, R.id.side_facing_arrow_list, questionList);
         questionListView.setAdapter(adapter);
@@ -88,9 +86,7 @@ public class QuestionSelectionFragment extends Fragment implements WebServiceCal
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 String textView = (String) parent.getItemAtPosition(position);
-
                 swapFragmentQuestionEdit(textView);
-
             }
 
         });
@@ -136,8 +132,6 @@ public class QuestionSelectionFragment extends Fragment implements WebServiceCal
         Collections.reverse(tempList);
 
         questionList.addAll(tempList);
-
-
 
         adapter.notifyDataSetChanged();
     }

@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import com.tkmcnally.quizter.http.WebServiceCaller;
 import com.tkmcnally.quizter.models.quizter.UserData;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -89,7 +91,12 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
             }
         });
         quizMeButton = (Button) view.findViewById(R.id.quiz_me_button);
-
+        quizMeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startQuiz();
+            }
+        });
         HashMap<String, String> jsonFields = new HashMap<String, String>();
         jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
         jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
@@ -112,11 +119,12 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
             if("true".equals(o.get("available_players").getAsString())) {
                 UserData jsonObject = new Gson().fromJson(message, type);
                 profileName.setText(jsonObject.getName());
+                Log.d("Quizter", "this is: " + jsonObject.getPhoto_url());
                 imageLoader.displayImage(jsonObject.getPhoto_url(), profilePicture, ((NavDrawerActivity) getActivity()).getOptions(), animateFirstListener);
             } else {
                 profileName.setText("No more available friends!");
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) profileName.getLayoutParams();
-                params.gravity= Gravity.CENTER_VERTICAL;
+                params.gravity = Gravity.CENTER_VERTICAL;
                 profileName.setLayoutParams(params);
                 skipButton.setVisibility(8);
                 quizMeButton.setVisibility(8);
@@ -166,6 +174,19 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
 
             return output;
         }
+    }
+
+    public void startQuiz() {
+        HashMap<Integer, String> map = new HashMap<Integer, String>();
+        Arrays.sort(map.keySet().toArray());
+        Fragment fragment = new QuizMeFragment();
+        Bundle args = new Bundle();
+        args.putString("question", "asdasdasda");
+
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuizMeFragment").commit();
     }
 
 
