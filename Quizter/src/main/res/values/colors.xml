@@ -6,4 +6,7 @@
     <color name="quizter_theme_color">#27ae60</color>
     <color name="quizter_theme_background">#ecf0f1</color>
 
+    <color name="quizter_quiz_wrong">#D19999</color>
+    <color name="quiztewr_quiz_correct">#86BF8A</color>
+
 </resources>

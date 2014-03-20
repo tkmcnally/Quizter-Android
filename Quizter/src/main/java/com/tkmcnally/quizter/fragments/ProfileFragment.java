@@ -83,6 +83,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         ab.setSubtitle("Dashboard");
         ab.setDisplayHomeAsUpEnabled(true);
 
+        Log.d("Quizter", "Density:" +  Util.getPictureSize(getResources()));
         typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
 
         questionListHashMap = new ArrayList<HashMap<Question, Answer>>();
@@ -102,7 +103,6 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             jsonFields.put(Constants.STRING_URL_PATH, Constants.UPDATE_QUESTIONS_PATH);
 
             List<JsonObject> jsonQuestions = new ArrayList<JsonObject>();
-
             try {
                 for(HashMap<Question, Answer> qa: questionListHashMap) {
                     for(Question q: qa.keySet()) {
@@ -158,7 +158,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
             jsonFields.put(Constants.STRING_URL_PATH, Constants.TESTING_API_PATH);
 
-            WebService ws = new WebService(getActivity(), "Logging in...");
+            WebService ws = new WebService(getActivity(), "Fetching profile...");
             ws.execute(jsonFields, this);
         }
 
@@ -195,10 +195,11 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
                 GoogleNowCard card = new GoogleNowCard(this.getActivity());
                 card.setQuestion(q);
                 card.setAnswer(map.get(q));
+                card.setIndex((cards.size()) + "");
                 card.setOnSwipeListener(swipeListener());
                 card.setOnClickListener(cardClickListener());
                 card.setType(2);
-                card.init();
+                card.setSwipeable(true);
                 cards.add(card);
             }
         }
@@ -239,10 +240,11 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
                 GoogleNowCard card = new GoogleNowCard(this.getActivity());
                 card.setQuestion(q);
                 card.setAnswer(map.get(q));
+                card.setIndex((cards.size()) + "");
                 card.setOnSwipeListener(swipeListener());
                 card.setOnClickListener(cardClickListener());
                 card.setType(2);
-                card.init();
+                card.setSwipeable(true);
                 cards.add(card);
             }
         }
@@ -335,6 +337,9 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             @Override
             public void onSwipe(Card card) {
                 cards.add(card);
+                for(int i = 1; i < cards.size(); i++) {
+                    ((GoogleNowCard) cards.get(i)).setIndex(i + "");
+                }
                 updateQuestionHashList();
            }
         };
@@ -411,5 +416,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             questionListHashMap.get(i - 1).clear();
             questionListHashMap.get(i - 1).put(new Question(question), new Answer(answer));
         }
+
+
     }
 }

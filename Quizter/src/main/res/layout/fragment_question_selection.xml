@@ -20,14 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_weight="0" >
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_marginLeft="4dip"
-                android:layout_marginRight="4dip"
-                android:background="#27ae60"
-                android:layout_alignParentTop="true"/>
+            android:layout_weight="0"
+            android:background="@color/quizter_theme_color">
+
 
             <Button
                 android:id="@+id/loadMoreQuestions"
@@ -36,6 +31,7 @@
                 android:layout_alignParentTop="true"
                 android:background="?android:attr/selectableItemBackground"
                 android:text="@string/loadMore"
+                android:textColor="@color/quizter_theme_background"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true" />
 

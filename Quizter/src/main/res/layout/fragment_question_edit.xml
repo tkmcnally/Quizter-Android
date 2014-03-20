@@ -3,7 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/quizter_theme_background">
 
     <LinearLayout
         android:orientation="vertical"
@@ -51,14 +52,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentBottom="true">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:background="#27ae60"
-            android:layout_alignParentTop="true"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/quizter_theme_color">
+
         <View
             android:id="@+id/ViewColorPickerHelper"
             android:layout_width="1dip"
@@ -67,7 +63,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="4dip"
             android:layout_marginTop="4dip"
-            android:background="#27ae60"
+            android:background="@color/quizter_theme_background"
             android:layout_centerHorizontal="true"/>
         <Button
             android:id="@+id/questionEditDiscard"
@@ -78,6 +74,7 @@
             android:layout_toLeftOf="@id/ViewColorPickerHelper"
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/discard"
+            android:textColor="@color/quizter_theme_background"
             android:layout_alignParentBottom="true"/>
         <Button
             android:id="@+id/questionEditSubmit"
@@ -87,6 +84,7 @@
             android:layout_alignParentTop="true"
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/submit"
+            android:textColor="@color/quizter_theme_background"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/ViewColorPickerHelper"/>
     </RelativeLayout>

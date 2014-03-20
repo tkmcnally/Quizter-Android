@@ -63,6 +63,8 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
     private QuizMeSelectionFragment fragment;
     private int player_index = 0;
 
+    private UserData userData;
+
     private WebService ws;
 
 
@@ -103,7 +105,7 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
         jsonFields.put(Constants.STRING_URL_PATH, Constants.FETCH_PLAYER_API_PATH);
         jsonFields.put(Constants.STRING_PLAYER_INDEX, player_index + "");
 
-        ws = new WebService(getActivity(), "Fetching profile...");
+        ws = new WebService(getActivity(), "Finding players...");
         ws.execute(jsonFields, fragment);
 
         return view;
@@ -121,6 +123,9 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
                 profileName.setText(jsonObject.getName());
                 Log.d("Quizter", "this is: " + jsonObject.getPhoto_url());
                 imageLoader.displayImage(jsonObject.getPhoto_url(), profilePicture, ((NavDrawerActivity) getActivity()).getOptions(), animateFirstListener);
+
+                userData = jsonObject;
+
             } else {
                 profileName.setText("No more available friends!");
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) profileName.getLayoutParams();
@@ -130,7 +135,6 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
                 quizMeButton.setVisibility(8);
                 profilePicture.setVisibility(8);
                 ((RelativeLayout)getView().findViewById(R.id.button_container)).setVisibility(8);
-
             }
         }
     }
@@ -143,7 +147,7 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
             if (loadedImage != null) {
                 ImageView imageView = (ImageView) view;
-                imageView.setImageBitmap(getRoundedBitmap(loadedImage));
+                imageView.setImageBitmap(getRoundedBitmap(loadedImage, view));
 
                 boolean firstDisplay = !displayedImages.contains(imageUri);
                 if (firstDisplay) {
@@ -153,14 +157,15 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
             }
         }
 
-        public static Bitmap getRoundedBitmap(Bitmap bitmap) {
-            final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        public static Bitmap getRoundedBitmap(Bitmap bitmap, View view) {
+            Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
             final Canvas canvas = new Canvas(output);
 
             final int color = Color.RED;
             final Paint paint = new Paint();
             final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
             final RectF rectF = new RectF(rect);
+
 
             paint.setAntiAlias(true);
             canvas.drawARGB(0, 0, 0, 0);
@@ -181,13 +186,11 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
         Arrays.sort(map.keySet().toArray());
         Fragment fragment = new QuizMeFragment();
         Bundle args = new Bundle();
-        args.putString("question", "asdasdasda");
+        args.putSerializable("user_data", userData);
 
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuizMeFragment").commit();
     }
-
-
 }

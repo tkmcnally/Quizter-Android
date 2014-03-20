@@ -4,7 +4,8 @@
     android:id="@+id/leaderboard_list_container"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
 
 
     <TextView
@@ -38,12 +39,20 @@
         android:paddingLeft="10dp"
         android:layout_centerVertical="true"/>
 
+
+    <ImageView
+        android:layout_width="64px"
+        android:layout_height="64px"
+        android:paddingLeft="5dp"
+        android:id="@+id/leaderboard_list_item_score_pic"
+        android:layout_alignRight="@+id/leaderboard_list_item_name"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="999"
         android:id="@+id/leaderboard_list_item_score"
-        android:layout_toRightOf="@+id/leaderboard_list_item_name"
-        android:paddingLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:paddingRight="15dp"
         android:layout_centerVertical="true"/>
 </RelativeLayout>

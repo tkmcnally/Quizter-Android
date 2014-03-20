@@ -43,6 +43,10 @@ public class Constants {
 
     public static String STRING_PLAYER_ID = "player_id";
 
+    public static String STRING_QUESTION_ANSWER = "question_answer";
+
+    public static String SUBMIT_QUIZ_API_PATH = "http://quizter.tkmcnally.com/api/android/facebook/submitquiz";
+
     public static class Config {
         public static final boolean DEVELOPER_MODE = false;
     }

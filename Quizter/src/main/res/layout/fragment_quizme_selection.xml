@@ -4,85 +4,96 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="invisible"
-    android:id="@+id/quiz_me_selection_container">
+    android:id="@+id/quiz_me_selection_container"
+    android:background="@color/quizter_theme_background"
+    android:weightSum="3">
+
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingTop="10dp"
         android:id="@+id/quiz_me_selection_image"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="30dp"
-        android:id="@+id/quiz_me_selection_name"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="20dp"
-        android:paddingTop="20dp"
-        />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_height="48dp"
-        android:id="@+id/button_container">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:background="#27ae60"
-            android:layout_alignParentTop="true"/>
-        <View
-            android:id="@+id/ViewColorPickerHelper"
-            android:layout_width="1dip"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="4dip"
-            android:layout_marginTop="4dip"
-            android:background="#27ae60"
-            android:layout_centerHorizontal="true"/>
+        android:layout_weight="2"/>
 
-        <View
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginLeft="4dip"
-            android:layout_marginRight="4dip"
-            android:background="#27ae60"
-            android:layout_alignParentBottom="true"/>
-        <Button
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/quiz_me"
-            android:id="@+id/quiz_me_button"
-            android:layout_weight="1"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/ViewColorPickerHelper"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/skip"
-            android:id="@+id/skip_button"
+            android:gravity="center_horizontal"
+            android:textSize="30dp"
+            android:id="@+id/quiz_me_selection_name"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/ViewColorPickerHelper"
-            android:layout_alignParentBottom="true"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:layout_height="48dp"
+            android:id="@+id/button_container">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:background="#27ae60"
+                android:layout_alignParentTop="true"/>
+            <View
+                android:id="@+id/ViewColorPickerHelper"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="4dip"
+                android:layout_marginTop="4dip"
+                android:background="#27ae60"
+                android:layout_centerHorizontal="true"/>
 
-    </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:background="#27ae60"
+                android:layout_alignParentBottom="true"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quiz_me"
+                android:id="@+id/quiz_me_button"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@id/ViewColorPickerHelper"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skip"
+                android:id="@+id/skip_button"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/ViewColorPickerHelper"
+                android:layout_alignParentBottom="true"
+                android:background="?android:attr/selectableItemBackground"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
 

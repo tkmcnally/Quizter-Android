@@ -2,6 +2,7 @@ package com.tkmcnally.quizter.adapters;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.tkmcnally.quizter.R;
 import com.tkmcnally.quizter.models.quizter.ScoreData;
 
 import java.util.ArrayList;
@@ -83,6 +85,7 @@ public class LeaderboardListAdapter extends BaseAdapter {
             holder.rankView = (TextView)view.findViewById(rankId);
             holder.scoreVeiw = (TextView)view.findViewById(scoreId);
             holder.userPic = (ImageView) view.findViewById(imageId);
+            holder.scorePic = (ImageView) view.findViewById(R.id.leaderboard_list_item_score_pic);
 
 
             view.setTag(holder);
@@ -93,6 +96,7 @@ public class LeaderboardListAdapter extends BaseAdapter {
         holder.nameView.setText(scoreData.getName());
         holder.rankView.setText(scoreData.getRank());
         holder.scoreVeiw.setText(scoreData.getScore());
+
 
         imageLoader.displayImage(scoreData.getPhoto_url(), holder.userPic, options, animateFirstListener);
 
@@ -134,5 +138,6 @@ public class LeaderboardListAdapter extends BaseAdapter {
         TextView nameView;
         TextView scoreVeiw;
         ImageView userPic;
+        ImageView scorePic;
     }
 }

@@ -1,20 +1,28 @@
 package com.tkmcnally.quizter.activities;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.EmbossMaskFilter;
+import android.graphics.MaskFilter;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.facebook.Session;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -24,6 +32,8 @@ import com.tkmcnally.quizter.fragments.LeaderboardFragment;
 import com.tkmcnally.quizter.fragments.ProfileFragment;
 import com.tkmcnally.quizter.adapters.NavDrawerListAdapter;
 import com.tkmcnally.quizter.fragments.QuizMeSelectionFragment;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Thomas on 1/10/14.
@@ -44,6 +54,9 @@ public class NavDrawerActivity extends FragmentActivity {
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
+    private FrameLayout frame;
+    private float lastTranslate = 0.0f;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +65,10 @@ public class NavDrawerActivity extends FragmentActivity {
         Log.d("quizter", "NAVDRAWER RECREATED");
 
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_stub)
                 .showImageForEmptyUri(R.drawable.ic_empty)
                 .showImageOnFail(R.drawable.ic_error)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
+                .cacheInMemory(false)
+                .cacheOnDisc(false)
                 .considerExifParams(true)
 
                 .build();
@@ -73,11 +85,17 @@ public class NavDrawerActivity extends FragmentActivity {
 
         navigationOptionList = getResources().getStringArray(R.array.navigationOptions);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
         drawerList = (ListView) findViewById(R.id.left_drawer);
 
       //  drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, navigationOptionList));
         drawerList.setAdapter(new NavDrawerListAdapter(this, navigationOptionList, navigationOptionListIcons));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        drawerLayout.setDrawerShadow(getResources().getDrawable(R.drawable.drawer_shadow), GravityCompat.START);
+
+        frame = (FrameLayout) findViewById(R.id.content_frame);
+
+        MaskFilter filter = new EmbossMaskFilter(new float[]{0f, -1.0f, 0.5f}, 0.8f, 15f, 1f);
 
         drawerToggler = new ActionBarDrawerToggle(this, drawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
@@ -92,6 +110,27 @@ public class NavDrawerActivity extends FragmentActivity {
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(drawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            @SuppressLint("NewApi")
+            public void onDrawerSlide(View drawerView, float slideOffset)
+            {
+                float divisor = 4.5f - getResources().getDisplayMetrics().density;
+                float moveFactor = (drawerLayout.getWidth() * slideOffset)/divisor;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                {
+                    frame.setTranslationX(moveFactor);
+                }
+                else
+                {
+                    TranslateAnimation anim = new TranslateAnimation(lastTranslate, moveFactor, 0.0f, 0.0f);
+                    anim.setDuration(0);
+                    anim.setFillAfter(true);
+                    frame.startAnimation(anim);
+
+                    lastTranslate = moveFactor;
+                }
             }
         };
 
@@ -113,39 +152,50 @@ public class NavDrawerActivity extends FragmentActivity {
         switch(position) {
             case 0:
                 Fragment fragment = new ProfileFragment();
-
-
-                if(profileBundle != null) {
-                    Log.d("quizter", "SET ARGUMENTS");
-                    fragment.setArguments(profileBundle);
-                }
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
+                Fragment myFragment = fragmentManager.findFragmentByTag("ProfileFragment");
+                if (myFragment == null || !myFragment.isVisible()) {
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "ProfileFragment").commit();
+
+                    if (profileBundle != null) {
+                        Log.d("quizter", "SET ARGUMENTS");
+                        fragment.setArguments(profileBundle);
+                    }
+                }
                 drawerList.setItemChecked(position, true);
                 setTitle(navigationOptionList[position]);
                 drawerLayout.closeDrawer(drawerList);
                 drawerList.setItemChecked(position, false);
+
                 break;
             case 1:
                 Fragment fragment1 = new QuizMeSelectionFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction().replace(R.id.content_frame, fragment1).commit();
 
+                Fragment myFragment1 = fragmentManager1.findFragmentByTag("QuizMeSelectionFragment");
+                if (myFragment1 == null || !myFragment1.isVisible()) {
+                    fragmentManager1.beginTransaction().replace(R.id.content_frame, fragment1, "QuizMeSelectionFragment").commit();
+                }
                 drawerList.setItemChecked(position, true);
                 setTitle(navigationOptionList[position]);
                 drawerLayout.closeDrawer(drawerList);
                 drawerList.setItemChecked(position, false);
+
                 break;
             case 2:
                 Fragment fragment2 = new LeaderboardFragment();
                 FragmentManager fragmentManager2 = getSupportFragmentManager();
-                fragmentManager2.beginTransaction().replace(R.id.content_frame, fragment2).commit();
 
+                Fragment myFragment2 = fragmentManager2.findFragmentByTag("LeaderboardFragment");
+                if (myFragment2 == null || !myFragment2.isVisible()) {
+                    fragmentManager2.beginTransaction().replace(R.id.content_frame, fragment2, "LeaderboardFragment").commit();
+                }
                 drawerList.setItemChecked(position, true);
                 setTitle(navigationOptionList[position]);
                 drawerLayout.closeDrawer(drawerList);
                 drawerList.setItemChecked(position, false);
+
                 break;
             case 3:
                 break;

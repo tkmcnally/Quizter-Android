@@ -30,6 +30,7 @@ public class WebService extends AsyncTask<Object, Boolean, String>{
 
     public WebService(Activity activity, String loadingMessage) {
         this.dialog = new ProgressDialog(activity);
+        this.dialog.setCancelable(false);
         this.dialog.setMessage(loadingMessage);
         if(!this.dialog.isShowing()){
             this.dialog.dismiss();

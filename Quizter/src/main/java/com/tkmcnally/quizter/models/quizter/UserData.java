@@ -1,5 +1,6 @@
 package com.tkmcnally.quizter.models.quizter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Map;
 /**
  * Created by missionary on 1/3/2014.
  */
-public class UserData {
+public class UserData implements Serializable {
 
     private String id;
     private String name;

@@ -4,23 +4,25 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:mode="twoLine"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+
     >
 
-    <TextView android:id="@+id/questionListTextItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dip"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        />
+            <TextView android:id="@+id/questionListTextItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dip"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                />
 
-    <TextView android:id="@+id/answerListTextItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/questionListTextItem"
-        android:layout_alignStart="@id/questionListTextItem"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+            <TextView android:id="@+id/answerListTextItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/questionListTextItem"
+                android:layout_alignStart="@id/questionListTextItem"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                />
+
+
+
 
 </TwoLineListItem>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/quiz_question_index"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:textStyle="bold"
+            android:textSize="60sp"
+            android:textColor="@color/quizter_theme_color"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_marginLeft="4dip"
+            android:layout_marginRight="4dip"
+            android:background="#27ae60"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/quiz_question_text"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingTop="20dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/quiz_question_answer_input"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textColorHint="@color/quizter_theme_color"
+            android:maxLength="100"
+            android:imeOptions="actionDone"
+            android:singleLine="false"
+            android:inputType="textPassword|textEmailAddress|textAutoCorrect"
+            android:password="false"/>
+    </LinearLayout>
+</LinearLayout>

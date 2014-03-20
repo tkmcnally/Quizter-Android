@@ -25,11 +25,14 @@ public class GoogleNowCard extends Card {
 
     protected TextView mQuestion;
     protected TextView mAnswer;
+    protected TextView mIndex;
+
     public Bitmap bitmap;
     protected int count;
 
     public Question question;
     public Answer answer;
+    public String index;
     public int resourceIdThumbnail;
 
 
@@ -39,12 +42,12 @@ public class GoogleNowCard extends Card {
 
     public GoogleNowCard(Context context, int innerLayout) {
         super(context, innerLayout);
+        index = new String();
         //init();
     }
 
     public void init() {
-        setTitle(question + " Swipe enabled");
-        setSwipeable(true);
+
     }
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
@@ -54,6 +57,7 @@ public class GoogleNowCard extends Card {
         //Retrieve elements
         mQuestion = (TextView) parent.findViewById(R.id.carddemo_myapps_main_inner_title);
         mAnswer = (TextView) parent.findViewById(R.id.carddemo_myapps_main_inner_secondaryTitle);
+        mIndex = (TextView) parent.findViewById(R.id.question_card_index);
 
         if (mQuestion != null) {
             Log.d("quizter", "color: " + ("#" + Integer.toHexString(getContext().getResources().getColor(R.color.quizter_theme_color))).replace("ff", ""));
@@ -65,6 +69,12 @@ public class GoogleNowCard extends Card {
             String html = "<b><font color='" +  ("#" + Integer.toHexString(getContext().getResources().getColor(R.color.quizter_theme_color))).replace("ff", "")  + "'>" + answer.prefix + "</font></b>" + answer.getAnswer();
             mAnswer.setText(Html.fromHtml(html));
         }
+
+        if(mIndex != null) {
+            mIndex.setText(index);
+        }
+
+
     }
 
 
@@ -84,6 +94,13 @@ public class GoogleNowCard extends Card {
         this.answer = answer;
     }
 
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
 
     public int getResourceIdThumbnail() {
         return resourceIdThumbnail;
