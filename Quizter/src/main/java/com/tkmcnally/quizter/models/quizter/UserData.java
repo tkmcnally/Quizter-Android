@@ -14,8 +14,9 @@ public class UserData implements Serializable {
     private String name;
     private String date_created;
     private String photo_url;
-
+    private String setup_profile;
     private String score;
+
     private List<HashMap<String, String>> questions;
 
     public String getId() {
@@ -48,6 +49,14 @@ public class UserData implements Serializable {
 
     public void setPhoto_url(String photo_url) {
         this.photo_url = photo_url;
+    }
+
+    public String getSetup_profile() {
+        return setup_profile;
+    }
+
+    public void setSetup_profile(String setup_profile) {
+        this.setup_profile = setup_profile;
     }
 
     public List<HashMap<String, String>>   getQuestions() {

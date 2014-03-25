@@ -125,28 +125,26 @@ public class QuestionSelectionFragment extends Fragment implements WebServiceCal
         for(HashMap<String, String> h: questions) {
             if(h.containsKey(Constants.STRING_QUESTION)) {
                 tempList.add(h.get(Constants.STRING_QUESTION));
-
             }
         }
 
         Collections.reverse(tempList);
-
         questionList.addAll(tempList);
-
         adapter.notifyDataSetChanged();
     }
 
     private void swapFragmentQuestionEdit(String textView) {
         HashMap<Integer, String> map = new HashMap<Integer, String>();
         Arrays.sort(map.keySet().toArray());
-        Fragment fragment = new QuestionEditFragment();
+        Fragment fragment = new QuestionModifyFragment();
         Bundle args = bundle;
         args.putString("question", textView);
 
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuestionEditFragment").addToBackStack("QuestionSelection").commit();
+
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuestionModifyFragment").commit();
 
     }
 }

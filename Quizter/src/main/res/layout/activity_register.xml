@@ -38,24 +38,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center">
-
-
                 <Button
                     android:id="@+id/saveProfileButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="?android:attr/borderlessButtonStyle"/>
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="40dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:text="@string/save"
-                    android:clickable="false"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/save"
-                    android:src="@drawable/cloud"
-                    android:scaleType="centerCrop"/>
+                    <TextView
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:gravity="center"
+                         android:text="Save Profile"
+                         android:textSize="20sp"
+                         android:textColor="@color/quizter_theme_background"/>
             </RelativeLayout>
 
         </RelativeLayout>

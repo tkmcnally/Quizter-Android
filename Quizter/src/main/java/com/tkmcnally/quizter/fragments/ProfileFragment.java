@@ -30,6 +30,7 @@ import com.tkmcnally.quizter.activities.NavDrawerActivity;
 import com.tkmcnally.quizter.Util;
 import com.tkmcnally.quizter.http.WebService;
 import com.tkmcnally.quizter.http.WebServiceCaller;
+import com.tkmcnally.quizter.models.now.GoogleNowLabelCard;
 import com.tkmcnally.quizter.models.quizter.Answer;
 import com.tkmcnally.quizter.models.now.GoogleNowCard;
 import com.tkmcnally.quizter.models.now.profile.Profile;
@@ -64,8 +65,9 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
     private ArrayList<Card> cards;
 
     private UserData user;
-
+    private boolean profile_setup;
     private GoogleNowProfileCard profileCard;
+    private GoogleNowLabelCard labelCard;
     private int clickedQuestionPosition = 0;
 
     private ProfileFragment fragment;
@@ -75,7 +77,12 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        bundle = getArguments();
+        if(savedInstanceState != null) {
+            bundle = savedInstanceState;
+            Log.d("Quizter", "bundle was saved!");
+        } else {
+            bundle = getArguments();
+        }
         View view = inflater.inflate(R.layout.activity_register, container, false);
 
         ActionBar ab = getActivity().getActionBar(); //needs  import android.app.ActionBar;
@@ -83,7 +90,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         ab.setSubtitle("Dashboard");
         ab.setDisplayHomeAsUpEnabled(true);
 
-        Log.d("Quizter", "Density:" +  Util.getPictureSize(getResources()));
+        //Log.d("Quizter", "Density:" +  Util.getPictureSize(getResources()));
         typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
 
         questionListHashMap = new ArrayList<HashMap<Question, Answer>>();
@@ -124,7 +131,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
             String questions = gson.toJson(jsonQuestions);
-            Log.d("quizter", questions);
+            //Log.d("quizter", questions);
             jsonFields.put(Constants.STRING_UPDATED_QUESTIONS, questions);
 
             WebService ws = new WebService(getActivity(), "Saving profile...");
@@ -147,7 +154,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             setupQuestionList(questions.getQuestions());
              if(bundle.getString("originalQuestion") != null) {
                 replaceQuestion(bundle.getString("originalQuestion"), bundle.getString("question"), bundle.getString("answer"), bundle.getInt("position"));
-            }
+             }
 
             ((LinearLayout) view.findViewById(R.id.containerRegisterActivity)).setVisibility(0);
 
@@ -172,6 +179,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             UserData jsonObject = new Gson().fromJson(tempString, type);
             setupQuestionList(jsonObject);
             user = jsonObject;
+            ((NavDrawerActivity) getActivity()).setUserData(user);
         }
     }
     public void setupQuestionList(List<HashMap<Question, Answer>> questions) {
@@ -190,12 +198,18 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         profileCard.init();
         cards.add(profileCard);
 
+        labelCard = new GoogleNowLabelCard(this.getActivity());
+        labelCard.setLabel("Your Questions");
+        labelCard.setSubLabel("Swipe left/right on a question to change its position");
+        labelCard.init();
+        cards.add(labelCard);
+
         for(HashMap<Question, Answer> map: questionListHashMap) {
             for(Question q: map.keySet()) {
                 GoogleNowCard card = new GoogleNowCard(this.getActivity());
                 card.setQuestion(q);
                 card.setAnswer(map.get(q));
-                card.setIndex((cards.size()) + "");
+                card.setIndex((cards.size() - 1) + "");
                 card.setOnSwipeListener(swipeListener());
                 card.setOnClickListener(cardClickListener());
                 card.setType(2);
@@ -235,12 +249,18 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         profileCard.init();
         cards.add(profileCard);
 
+        labelCard = new GoogleNowLabelCard(this.getActivity());
+        labelCard.setLabel("Your Questions");
+        labelCard.setSubLabel("Swipe left/right on a question to change its position");
+        labelCard.init();
+        cards.add(labelCard);
+
         for(HashMap<Question, Answer> map: questionListHashMap) {
             for(Question q: map.keySet()) {
                 GoogleNowCard card = new GoogleNowCard(this.getActivity());
                 card.setQuestion(q);
                 card.setAnswer(map.get(q));
-                card.setIndex((cards.size()) + "");
+                card.setIndex((cards.size() - 1) + "");
                 card.setOnSwipeListener(swipeListener());
                 card.setOnClickListener(cardClickListener());
                 card.setType(2);
@@ -256,9 +276,9 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         }
     }
 
-    private void swapFragmentQuestionSelection(String originalQuestion, int clickedQuestionPosition) {
+    private void swapFragmentQuestionSelection(String originalQuestion, String originalAnswer, int clickedQuestionPosition) {
 
-        Fragment fragment = new QuestionSelectionFragment();
+        Fragment fragment = new QuestionModifyFragment();
         Bundle args = new Bundle();
 
         Profile profile = new Profile();
@@ -273,6 +293,7 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         photo.setBitmap(bitmap);
         args.putParcelable("photo", photo);
         args.putString("originalQuestion", originalQuestion);
+        args.putString("originalAnswer", originalAnswer);
 
         ProfileQuestions questions = new ProfileQuestions();
         questions.setQuestions(questionListHashMap);
@@ -282,26 +303,28 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
 
         fragment.setArguments(args);
 
+        onSaveInstanceState(args);
+
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuestionSelectionFragment").commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuestionModifyFragment").commit();
 
     }
 
     private void replaceQuestion(String originalQuestion, String question, String answer, int position) {
+
         List<HashMap<Question, Answer>> temp = new ArrayList<HashMap<Question, Answer>>();
         temp.addAll(questionListHashMap);
 
-
         for(HashMap<Question, Answer> qa: temp) {
             for(Question q: qa.keySet()) {
-                if(q.toString().equals(originalQuestion) && temp.indexOf(qa) == position){
+                if(q.getQuestion().toString().equals(originalQuestion) && temp.indexOf(qa) == position){
                     Question quest = new Question(question);
                     Answer ans = new Answer(answer);
                     questionListHashMap.get(questionListHashMap.indexOf(qa)).clear();
                     questionListHashMap.get(questionListHashMap.indexOf(qa)).put(quest, ans);
 
-                    ((GoogleNowCard) cards.get(position + 1)).setQuestion(quest);
-                    ((GoogleNowCard) cards.get(position + 1)).setAnswer(ans);
+                    ((GoogleNowCard) cards.get(position + 2)).setQuestion(quest);
+                    ((GoogleNowCard) cards.get(position + 2)).setAnswer(ans);
                 }
             }
         }
@@ -337,8 +360,8 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             @Override
             public void onSwipe(Card card) {
                 cards.add(card);
-                for(int i = 1; i < cards.size(); i++) {
-                    ((GoogleNowCard) cards.get(i)).setIndex(i + "");
+                for(int i = 2; i < cards.size(); i++) {
+                    ((GoogleNowCard) cards.get(i)).setIndex((i - 1) + "");
                 }
                 updateQuestionHashList();
            }
@@ -352,23 +375,9 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
                 GoogleNowCard questionCard = (GoogleNowCard) card;
                 int position = cards.indexOf(card);
                 clickedQuestionPosition = position;
-                swapFragmentQuestionSelection(questionCard.getQuestion().toString(), clickedQuestionPosition - 1);
+                swapFragmentQuestionSelection(questionCard.getQuestion().getQuestion().toString(), questionCard.getAnswer().getAnswer().toString(), clickedQuestionPosition - 2);
             }
         };
-    }
-
-    public void finishLoadingImage() {
-        questionListHashMap.clear();
-
-        List<HashMap<String, String>> questions = user.getQuestions();
-        for(HashMap<String, String> h: questions) {
-            Question q = new Question(h.get(Constants.STRING_QUESTION));
-            Answer a = new Answer(h.get(Constants.STRING_ANSWER));
-            HashMap<Question, Answer> qa = new HashMap<Question, Answer>();
-            qa.put(q,a);
-            questionListHashMap.add(qa);
-        }
-        setupQuestionList(questionListHashMap);
     }
 
     /**
@@ -409,14 +418,34 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
     }
 
     public void updateQuestionHashList() {
-        for(int i = 1; i < cards.size(); i++) {
+        for(int i = 2; i < cards.size(); i++) {
             String question = ((GoogleNowCard) cards.get(i)).getQuestion().getQuestion();
             String answer = ((GoogleNowCard) cards.get(i)).getAnswer().getAnswer();
 
-            questionListHashMap.get(i - 1).clear();
-            questionListHashMap.get(i - 1).put(new Question(question), new Answer(answer));
+            questionListHashMap.get(i - 2).clear();
+            questionListHashMap.get(i - 2).put(new Question(question), new Answer(answer));
         }
+    }
 
+    public boolean hasSetupProfile() {
+        if("false".equals(user.getSetup_profile())){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        this.bundle = savedInstanceState;
+        super.onActivityCreated(savedInstanceState);
+        Log.d("Quizter", "Onactivity created");
 
     }
+
 }

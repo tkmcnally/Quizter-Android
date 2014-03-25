@@ -60,7 +60,7 @@ public class GoogleNowCard extends Card {
         mIndex = (TextView) parent.findViewById(R.id.question_card_index);
 
         if (mQuestion != null) {
-            Log.d("quizter", "color: " + ("#" + Integer.toHexString(getContext().getResources().getColor(R.color.quizter_theme_color))).replace("ff", ""));
+           // Log.d("quizter", "color: " + ("#" + Integer.toHexString(getContext().getResources().getColor(R.color.quizter_theme_color))).replace("ff", ""));
             String html = "<b><font color='" +  ("#" + Integer.toHexString(getContext().getResources().getColor(R.color.quizter_theme_color))).replace("ff", "") + "'>" + question.prefix + "</font></b>" + question.getQuestion();
             mQuestion.setText(Html.fromHtml(html));
         }
@@ -73,8 +73,6 @@ public class GoogleNowCard extends Card {
         if(mIndex != null) {
             mIndex.setText(index);
         }
-
-
     }
 
 

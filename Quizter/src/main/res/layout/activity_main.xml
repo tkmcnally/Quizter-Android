@@ -4,44 +4,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame" >
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent">
-
+    tools:ignore="MergeRootFrame"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="4"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/appentry">
+            android:layout_height="0dp"
+            android:layout_weight="2">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/quizter_welcome_logo"
+                android:id="@+id/welcome_logo"/>
+        </LinearLayout>
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
 
+            <LinearLayout
+                android:id="@+id/welcome_title_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome_message"
+                    android:id="@+id/connectMoto"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:textSize="30sp"
+                    android:textColor="@color/quizter_theme_background" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome_bold_title"
+                    android:id="@+id/welcome_bold_title"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/quizter_theme_background" />
+
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connect_description"
+                    android:id="@+id/connectDescription"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:textSize="20sp"
+                    android:textColor="@color/quizter_theme_background" />
+            </LinearLayout>
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/appentry"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_below="@+id/welcome_title_container">
+
+                <com.facebook.widget.LoginButton
+                    android:id="@+id/authButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+
+                    />
+
+            </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/connect_facebook"
-                android:id="@+id/connectMoto"
+                android:text="@string/welcome_information"
+                android:id="@+id/welcome_information"
                 android:gravity="center_horizontal"
+                android:layout_below="@+id/appentry"
                 android:layout_gravity="center_horizontal|bottom"
-                android:textSize="40dp"
+                android:layout_marginTop="10dp"
+                android:lines="2"
                 android:textColor="@color/quizter_theme_background" />
-        </LinearLayout>
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/appentry"
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_centerInParent="true">
-
-            <com.facebook.widget.LoginButton
-                android:id="@+id/authButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                />
-
-        </LinearLayout>
-    </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>

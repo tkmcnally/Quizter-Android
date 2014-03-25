@@ -54,5 +54,7 @@
             android:singleLine="false"
             android:inputType="textPassword|textEmailAddress|textAutoCorrect"
             android:password="false"/>
+
+
     </LinearLayout>
 </LinearLayout>

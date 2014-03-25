@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:background="@drawable/rounded_card"
+    android:layout_height="70dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dip"
+            android:background="#27ae60"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@+id/cards_list_label"
+            />
+        <TextView
+            android:id="@+id/cards_list_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Questions"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:textSize="18sp"/>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dip"
+            android:background="#27ae60"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/cards_list_label"/>
+        <TextView
+            android:id="@+id/cards_list_label_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click a question to modify it!"
+            android:textColor="#7f8c8d"
+            android:layout_gravity="center"
+            android:layout_below="@+id/cards_list_label"
+            android:layout_centerHorizontal="true"
+            android:textSize="13sp"/>
+    </RelativeLayout>
+
+</LinearLayout>

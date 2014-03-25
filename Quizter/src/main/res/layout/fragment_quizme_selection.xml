@@ -94,7 +94,34 @@
         </RelativeLayout>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/no_friends_found_container"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:text="No friends found!"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:id="@+id/no_friends_found_text"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="Try Searching Again!"
+            android:id="@+id/search_again"
+            android:textColor="@color/quizter_theme_background"
+            android:background="@drawable/rounded_button"
+            android:layout_gravity="center_horizontal|bottom"/>
 
-
+        </LinearLayout>
 </LinearLayout>

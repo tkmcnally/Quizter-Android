@@ -24,7 +24,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.BounceInterpolator;
@@ -51,10 +53,14 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tkmcnally.quizter.Constants;
 import com.tkmcnally.quizter.R;
+import com.tkmcnally.quizter.Util;
 import com.tkmcnally.quizter.activities.NavDrawerActivity;
 import com.tkmcnally.quizter.http.WebService;
 import com.tkmcnally.quizter.http.WebServiceCaller;
+import com.tkmcnally.quizter.models.SubmitDialog;
 import com.tkmcnally.quizter.models.quizter.UserData;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -67,12 +73,12 @@ import java.util.List;
 /**
  * Created by Thomas on 2/6/14.
  */
-public class QuizMeFragment extends Fragment implements WebServiceCaller {
+public class QuizMeFragment extends Fragment implements WebServiceCaller, Animation.AnimationListener {
 
     protected ImageLoader imageLoader = ImageLoader.getInstance();
     private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
     private Bundle bundle;
-
+    private TextView quizTip;
     private WebService ws;
     private QuizMeFragment fragment;
     private UserData user;
@@ -82,6 +88,8 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
 
     private List<String> questionList;
     private List<String> answerList;
+
+    private AlertDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +101,7 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
         bundle = getArguments();
 
         user = (UserData) bundle.getSerializable("user_data");
-
+        quizTip = (TextView) rootView.findViewById(R.id.quiz_tip);
         profilePicture = (ImageView) rootView.findViewById(R.id.quiz_player_image);
         imageLoader.displayImage(user.getPhoto_url(), profilePicture, ((NavDrawerActivity) getActivity()).getOptions(), animateFirstListener);
 
@@ -101,18 +109,46 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Submit Quiz")
-                        .setMessage("Do you wish to submit?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int button) {
-                                submitQuiz();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
+                View inflatedView = getActivity().getLayoutInflater().inflate(R.layout.quizter_submit_dialog,null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setView(inflatedView);
+                builder.setInverseBackgroundForced(true);
+                builder.setCancelable(true);
+
+                Button noBtn =(Button)inflatedView.findViewById(R.id.btn_no);
+                noBtn.setText("No");
+
+                Button okBtn =(Button)inflatedView.findViewById(R.id.btn_yes);
+                okBtn.setText("Yes");
+
+                String mess = "Do you wish you submit your quiz?";
+                TextView messageView = (TextView) inflatedView.findViewById(R.id.txt_dia);
+                messageView.setText(mess);
+
+
+                okBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.hide();
+                        submitQuiz();
+                    }
+                });
+
+                noBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.hide();
+                    }
+                });
+
+
+                alertDialog = builder.create();
+                alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                alertDialog.show();
+
             }
         });
+
 
         questionList = new ArrayList<String>();
         answerList = new ArrayList<String>();
@@ -151,12 +187,9 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
             JsonParser parser = new JsonParser();
             JsonObject o = (JsonObject) parser.parse(message);
             if("true".equals(o.get("valid").getAsString())) {
-                Toast.makeText(getActivity(), "valid, score: " + o.get("score").getAsString(), Toast.LENGTH_SHORT).show();
                 goToStats(message);
-            } else {
-                Toast.makeText(getActivity(), "not valid", Toast.LENGTH_SHORT).show();
             }
-            Log.d("Quizter", "QUIZREPLY: " + message);
+            //Log.d("Quizter", "QUIZREPLY: " + message);
         }
     }
 
@@ -175,6 +208,7 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
         animationSet.addAnimation(animation1);
         animationSet.addAnimation(animation2);
 
+        animation1.setAnimationListener(this);
         viewPager.startAnimation(animationSet);
 
         StringPageAdapter adapter = new StringPageAdapter();
@@ -199,7 +233,7 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
         public Object instantiateItem(ViewGroup container, int position) {
             final int p = position;
             Context context = getActivity();
-            Log.d("Quizter", "INSTANTIATED NOW");
+            //Log.d("Quizter", "INSTANTIATED NOW");
 
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(R.layout.quiz_question_list, null);
@@ -309,6 +343,7 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
         jsonFields.put(Constants.STRING_URL_PATH, Constants.SUBMIT_QUIZ_API_PATH);
         jsonFields.put(Constants.STRING_PLAYER_ID, user.getId());
         jsonFields.put(Constants.STRING_QUESTION_ANSWER, questions);
+        jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
 
         ws = new WebService(getActivity(), "Submitting quiz...");
         ws.execute(jsonFields, fragment);
@@ -329,7 +364,26 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller {
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuizOverviewFragment").commit();
     }
 
+    @Override
+    public void onAnimationStart(Animation animation) {
 
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        quizTip.setVisibility(View.VISIBLE);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        alphaAnimation.setDuration(500);
+
+        //Log.d("Quizter", "ANIMATION IS WORKING?");
+
+        quizTip.startAnimation(alphaAnimation);
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
 
 
 }

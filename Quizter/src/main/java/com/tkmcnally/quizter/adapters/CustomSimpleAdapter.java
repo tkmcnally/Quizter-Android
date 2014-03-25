@@ -33,7 +33,7 @@ public class CustomSimpleAdapter extends SimpleAdapter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("quizter", is.toString());
+        //Log.d("quizter", is.toString());
 
         typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
     }

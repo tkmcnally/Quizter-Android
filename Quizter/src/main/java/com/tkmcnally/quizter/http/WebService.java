@@ -50,7 +50,7 @@ public class WebService extends AsyncTask<Object, Boolean, String>{
         String API_PATH = jsonObject.get("urlPath").getAsString();
         jsonObject.remove("urlPath");
 
-        Log.d("quizter", jsonObject.toString());
+        //Log.d("quizter", jsonObject.toString());
 
         //Create HTTP request
         HttpClient httpClient = new DefaultHttpClient();
@@ -80,7 +80,7 @@ public class WebService extends AsyncTask<Object, Boolean, String>{
         result = result.replace("]\"", "]");
         result =  result.replace("\\\"", "\"");
 
-        Log.d("quizter", result);
+        Log.d("quizter", "incoming json: " + result);
 
         inputStream.close();
 

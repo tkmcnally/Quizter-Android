@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="70dp"
+    android:background="@drawable/rounded_card">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/card_index_container_overview">
+        <TextView android:id="@+id/question_card_index"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="1"
+            android:textColor="@color/quizter_theme_background"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:paddingRight="3dp"
+            android:paddingLeft="3dp"
+            android:layout_gravity="center_vertical"
+            android:textAlignment="center"
+            android:gravity="center_horizontal|center_vertical"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+
+
+            />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_marginLeft="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/carddemo_myapps_main_inner_title"
+                style="@style/carddemo_myapps_main_inner_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/carddemo_myapps_main_inner_secondaryTitle"
+                style="@style/carddemo_myapps_main_inner_secondarytitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/already_answered_flag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:text="You have already answered this"
+                android:textColor="#eb212e"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingRight="7dp">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/icon_mark"
+                />
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</LinearLayout>

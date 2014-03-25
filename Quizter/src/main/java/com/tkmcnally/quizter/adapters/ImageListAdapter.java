@@ -40,7 +40,7 @@ public class ImageListAdapter extends ArrayAdapter
         label.setText(items.get(pos));
 
         ImageView icon=(ImageView)row.findViewById(imageId);
-        icon.setImageResource(R.drawable.arrow3);
+        icon.setImageResource(R.drawable.arrow1);
 
 
         return(row);

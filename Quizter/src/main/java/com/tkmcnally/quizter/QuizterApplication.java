@@ -37,11 +37,10 @@ public class QuizterApplication extends Application {
                 .denyCacheImageMultipleSizesInMemory()
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .writeDebugLogs() // Remove for release app
                 .build();
 
 
-        Log.d("UIL", "started");
+       // Log.d("UIL", "started");
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
     }

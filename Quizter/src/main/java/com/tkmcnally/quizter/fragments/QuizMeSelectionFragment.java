@@ -121,20 +121,42 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
             if("true".equals(o.get("available_players").getAsString())) {
                 UserData jsonObject = new Gson().fromJson(message, type);
                 profileName.setText(jsonObject.getName());
-                Log.d("Quizter", "this is: " + jsonObject.getPhoto_url());
+                //Log.d("Quizter", "this is: " + jsonObject.getPhoto_url());
                 imageLoader.displayImage(jsonObject.getPhoto_url(), profilePicture, ((NavDrawerActivity) getActivity()).getOptions(), animateFirstListener);
 
                 userData = jsonObject;
 
             } else {
-                profileName.setText("No more available friends!");
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) profileName.getLayoutParams();
-                params.gravity = Gravity.CENTER_VERTICAL;
-                profileName.setLayoutParams(params);
-                skipButton.setVisibility(8);
-                quizMeButton.setVisibility(8);
-                profilePicture.setVisibility(8);
-                ((RelativeLayout)getView().findViewById(R.id.button_container)).setVisibility(8);
+
+                skipButton.setVisibility(View.GONE);
+                quizMeButton.setVisibility(View.GONE);
+                profileName.setVisibility(View.GONE);
+                profilePicture.setVisibility(View.GONE);
+                ((RelativeLayout)getView().findViewById(R.id.button_container)).setVisibility(View.GONE);
+
+                ((LinearLayout)getView().findViewById(R.id.no_friends_found_container)).setVisibility(View.VISIBLE);
+
+                TextView noFriendsMessage = (TextView) getView().findViewById(R.id.no_friends_found_text);
+                noFriendsMessage.setText("No more available friends!");
+
+                Button searchAgainButton = (Button) getView().findViewById(R.id.search_again);
+                searchAgainButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        player_index = -1;
+
+                        skipButton.setVisibility(View.VISIBLE);
+                        quizMeButton.setVisibility(View.VISIBLE);
+                        profileName.setVisibility(View.VISIBLE);
+                        profileName.setText("");
+                        profilePicture.setVisibility(View.INVISIBLE);
+
+                        ((RelativeLayout)getView().findViewById(R.id.button_container)).setVisibility(View.VISIBLE);
+                        ((LinearLayout)getView().findViewById(R.id.no_friends_found_container)).setVisibility(View.GONE);
+                        skipButton.performClick();
+                    }
+                });
             }
         }
     }
@@ -148,7 +170,7 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
             if (loadedImage != null) {
                 ImageView imageView = (ImageView) view;
                 imageView.setImageBitmap(getRoundedBitmap(loadedImage, view));
-
+                imageView.setVisibility(View.VISIBLE);
                 boolean firstDisplay = !displayedImages.contains(imageUri);
                 if (firstDisplay) {
                     FadeInBitmapDisplayer.animate(imageView, 500);

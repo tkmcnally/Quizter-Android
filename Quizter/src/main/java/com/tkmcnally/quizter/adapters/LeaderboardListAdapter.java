@@ -85,7 +85,7 @@ public class LeaderboardListAdapter extends BaseAdapter {
             holder.rankView = (TextView)view.findViewById(rankId);
             holder.scoreVeiw = (TextView)view.findViewById(scoreId);
             holder.userPic = (ImageView) view.findViewById(imageId);
-            holder.scorePic = (ImageView) view.findViewById(R.id.leaderboard_list_item_score_pic);
+            holder.scorePic = (ImageView) view.findViewById(R.id.leaderboard_star);
 
 
             view.setTag(holder);
@@ -97,9 +97,9 @@ public class LeaderboardListAdapter extends BaseAdapter {
         holder.rankView.setText(scoreData.getRank());
         holder.scoreVeiw.setText(scoreData.getScore());
 
-
+        String uri = "drawable://" + R.drawable.score_star;
         imageLoader.displayImage(scoreData.getPhoto_url(), holder.userPic, options, animateFirstListener);
-
+     //   imageLoader.displayImage(uri, holder.scorePic);
         return(view);
     }
 

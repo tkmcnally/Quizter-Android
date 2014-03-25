@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,7 @@ public class QuestionModifyFragment extends Fragment {
     private TextView questionField;
     private EditText answerField;
 
-    private Typeface typeface;
+   // private Typeface typeface;
 
 
     private Bundle bundle;
@@ -34,28 +36,33 @@ public class QuestionModifyFragment extends Fragment {
 
         bundle = getArguments();
 
-        View view = inflater.inflate(R.layout.fragment_question_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_question_modify, container, false);
 
         ActionBar ab = getActivity().getActionBar(); //needs  import android.app.ActionBar;
         ab.setTitle("Quizter");
         ab.setSubtitle("Edit Question");
         ab.setDisplayHomeAsUpEnabled(true);
 
-        typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
+        questionField = (TextView) view.findViewById(R.id.questionEditField);
 
-        questionField = (TextView) view.findViewById(R.id.questionValue);
-        questionField.setTypeface(typeface);
-        questionField.setText(bundle.getString("question"));
+        if(bundle.getString("question") != null) {
+            questionField.setText(bundle.getString("question"));
+        } else {
+            questionField.setText(bundle.getString("originalQuestion"));
+        }
+
         answerField = (EditText) view.findViewById(R.id.answerEditField);
+        answerField.setText(bundle.getString("originalAnswer"));
 
         discardButton = (Button) view.findViewById(R.id.questionEditDiscard);
-        discardButton.setTypeface(typeface);
         discardButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle args = bundle;
+                args.putString("question", (String) bundle.get("originalQuestion"));
+                args.putString("answer", (String) bundle.get("originalAnswer"));
 
-                Fragment fragment = new QuestionSelectionFragment();
+                Fragment fragment = new ProfileFragment();
                 fragment.setArguments(args);
 
                 getFragmentManager().popBackStack();
@@ -67,11 +74,9 @@ public class QuestionModifyFragment extends Fragment {
         });
 
         submitButton = (Button) view.findViewById(R.id.questionEditSubmit);
-        submitButton.setTypeface(typeface);
         submitButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Bundle args = bundle;
                 args.putString("question", questionField.getText().toString());
                 args.putString("answer", answerField.getText().toString());
@@ -84,9 +89,7 @@ public class QuestionModifyFragment extends Fragment {
             }
         });
 
-
         chooseNewQuestionButton = (Button) view.findViewById(R.id.chooseNewQuestion);
-        chooseNewQuestionButton.setTypeface(typeface);
         chooseNewQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +102,19 @@ public class QuestionModifyFragment extends Fragment {
                 fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuestionSelectionFragment").commit();
             }
         });
+
+
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    Log.d("Quizter", "BACK IS CLICKED");
+                    discardButton.performClick();
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -106,4 +122,10 @@ public class QuestionModifyFragment extends Fragment {
         TextView questionValue = (TextView) getView().findViewById(R.id.questionValue);
         questionValue.setText(question);
     }
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+    }
+
+
 }

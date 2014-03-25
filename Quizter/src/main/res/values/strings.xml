@@ -31,5 +31,9 @@
     <string name="FLAT_GREEN">#27ae60</string>
     <string name="navDrawer">Quizter</string>
     <string name="leaderboard">Leaderboard</string>
+    <string name="welcome_message">WELCOME TO</string>
+    <string name="connect_description">We use Facebook to connect you and your friends through Quizter!</string>
+    <string name="welcome_bold_title">Quizter</string>
+    <string name="welcome_information">NOTHING WILL BE POSTED WITHOUT YOUR PERMISSION</string>
 
 </resources>

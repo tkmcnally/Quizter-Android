@@ -2,6 +2,7 @@ package com.tkmcnally.quizter.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.EmbossMaskFilter;
 import android.graphics.MaskFilter;
@@ -18,8 +19,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +34,9 @@ import com.tkmcnally.quizter.R;
 import com.tkmcnally.quizter.fragments.LeaderboardFragment;
 import com.tkmcnally.quizter.fragments.ProfileFragment;
 import com.tkmcnally.quizter.adapters.NavDrawerListAdapter;
+import com.tkmcnally.quizter.fragments.QuestionModifyFragment;
 import com.tkmcnally.quizter.fragments.QuizMeSelectionFragment;
+import com.tkmcnally.quizter.models.quizter.UserData;
 
 import org.w3c.dom.Text;
 
@@ -46,6 +51,8 @@ public class NavDrawerActivity extends FragmentActivity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggler;
 
+    private AlertDialog alertDialog;
+
     public Bundle profileBundle;
 
     private CharSequence title, drawerTitle;
@@ -57,12 +64,14 @@ public class NavDrawerActivity extends FragmentActivity {
     private FrameLayout frame;
     private float lastTranslate = 0.0f;
 
+    private UserData userData;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
 
-        Log.d("quizter", "NAVDRAWER RECREATED");
+        //Log.d("quizter", "NAVDRAWER RECREATED");
 
         options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.ic_empty)
@@ -81,7 +90,7 @@ public class NavDrawerActivity extends FragmentActivity {
 
         title = drawerTitle = getTitle();
 
-        navigationOptionListIcons = new int[] { R.drawable.user, R.drawable.quizme, R.drawable.trophy, R.drawable.settings, R.drawable.signout};
+        navigationOptionListIcons = new int[] { R.drawable.user, R.drawable.quizme, R.drawable.trophy, R.drawable.feedback, R.drawable.signout};
 
         navigationOptionList = getResources().getStringArray(R.array.navigationOptions);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -159,7 +168,7 @@ public class NavDrawerActivity extends FragmentActivity {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "ProfileFragment").commit();
 
                     if (profileBundle != null) {
-                        Log.d("quizter", "SET ARGUMENTS");
+                        //Log.d("quizter", "SET ARGUMENTS");
                         fragment.setArguments(profileBundle);
                     }
                 }
@@ -170,18 +179,44 @@ public class NavDrawerActivity extends FragmentActivity {
 
                 break;
             case 1:
+
                 Fragment fragment1 = new QuizMeSelectionFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
 
-                Fragment myFragment1 = fragmentManager1.findFragmentByTag("QuizMeSelectionFragment");
-                if (myFragment1 == null || !myFragment1.isVisible()) {
-                    fragmentManager1.beginTransaction().replace(R.id.content_frame, fragment1, "QuizMeSelectionFragment").commit();
+                ProfileFragment profileFragment = (ProfileFragment) fragmentManager1.findFragmentByTag("ProfileFragment");
+                if("true".equals(userData.getSetup_profile())) {
+                    Fragment myFragment1 = fragmentManager1.findFragmentByTag("QuizMeSelectionFragment");
+                    if (myFragment1 == null || !myFragment1.isVisible()) {
+                        fragmentManager1.beginTransaction().replace(R.id.content_frame, fragment1, "QuizMeSelectionFragment").commit();
+                    }
+
+                } else {
+                    View inflatedView = this.getLayoutInflater().inflate(R.layout.quizter_profile_not_set, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setView(inflatedView);
+                    builder.setInverseBackgroundForced(true);
+                    builder.setCancelable(true);
+
+                    Button okBtn =(Button)inflatedView.findViewById(R.id.profile_setup_ok_btn);
+                    okBtn.setText("Ok");
+
+                    okBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.hide();
+                            alertDialog.cancel();
+                        }
+                    });
+
+                    alertDialog = builder.create();
+                    alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    alertDialog.show();
+
                 }
                 drawerList.setItemChecked(position, true);
                 setTitle(navigationOptionList[position]);
                 drawerLayout.closeDrawer(drawerList);
                 drawerList.setItemChecked(position, false);
-
                 break;
             case 2:
                 Fragment fragment2 = new LeaderboardFragment();
@@ -198,13 +233,27 @@ public class NavDrawerActivity extends FragmentActivity {
 
                 break;
             case 3:
+
+                Intent intent1 = new Intent(Intent.ACTION_SEND);
+                intent1.setType("plain/text");
+                intent1.putExtra(Intent.EXTRA_EMAIL, new String[]{"wiredin.dev@gmail.com"});
+                intent1.putExtra(Intent.EXTRA_SUBJECT, "Quizter - Feedback");
+                intent1.putExtra(Intent.EXTRA_TEXT, "Developer information: " + Build.VERSION.RELEASE + " " + Build.VERSION.SDK_INT + " " + Build.VERSION.INCREMENTAL + "\n\n");
+
+                drawerList.setItemChecked(position, true);
+                setTitle(navigationOptionList[position]);
+                drawerLayout.closeDrawer(drawerList);
+                drawerList.setItemChecked(position, false);
+
+                startActivity(Intent.createChooser(intent1, ""));
                 break;
+
             case 4:
                 Session.getActiveSession().closeAndClearTokenInformation();
-                Intent intent = new Intent(this, QuizterActivity.class);
+                Intent intent2 = new Intent(this, QuizterActivity.class);
                 finish();
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent2);
                 break;
 
         }
@@ -256,8 +305,15 @@ public class NavDrawerActivity extends FragmentActivity {
 
         if(profileFragment != null) {
             if (!profileFragment.isVisible()) {
-                super.onBackPressed();
+                QuestionModifyFragment questionModifyFragment = (QuestionModifyFragment)getSupportFragmentManager().findFragmentByTag("QuestionModifyFragment");
+                if(questionModifyFragment.isVisible()) {
+                    Log.d("Quizter", "back pressed now");
+                    getFragmentManager().popBackStack();
+                } else {
+                    super.onBackPressed();
+                }
             }
+
 
         } else {
             super.onBackPressed();
@@ -272,5 +328,10 @@ public class NavDrawerActivity extends FragmentActivity {
 
     public DisplayImageOptions getOptions() {
         return options;
+    }
+
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 }

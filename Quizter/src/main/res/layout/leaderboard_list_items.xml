@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/leaderboard_list_container"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp">
+    android:layout_margin="15dp"
+
+    >
 
 
     <TextView
         android:layout_width="75dip"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="1."
         android:id="@+id/leaderboard_list_item_rank"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingLeft="20dp"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"/>
 
     <ImageView
         android:layout_width="50dip"
@@ -32,27 +35,35 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="Brandon Crosby"
         android:id="@+id/leaderboard_list_item_name"
         android:layout_toRightOf="@+id/leaderboard_list_item_picture"
         android:paddingLeft="10dp"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"/>
 
 
-    <ImageView
-        android:layout_width="64px"
-        android:layout_height="64px"
-        android:paddingLeft="5dp"
-        android:id="@+id/leaderboard_list_item_score_pic"
-        android:layout_alignRight="@+id/leaderboard_list_item_name"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="999"
-        android:id="@+id/leaderboard_list_item_score"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:paddingRight="15dp"
-        android:layout_centerVertical="true"/>
-</RelativeLayout>
+        android:gravity="right"
+        android:paddingRight="10dp">
+        <ImageView
+            android:layout_width="64px"
+            android:layout_height="64px"
+            android:background="@drawable/star"
+            android:id="@+id/leaderboard_star"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="999"
+            android:paddingLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/leaderboard_list_item_score"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </LinearLayout>
+</LinearLayout>
