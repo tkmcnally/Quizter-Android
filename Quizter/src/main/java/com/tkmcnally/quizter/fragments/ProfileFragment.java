@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.gson.Gson;
@@ -182,6 +183,18 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             ((NavDrawerActivity) getActivity()).setUserData(user);
         }
     }
+
+    @Override
+    public void handleUnauthorizedError() {
+        ((NavDrawerActivity) getActivity()).handleUnauthorizedError();
+    }
+
+    @Override
+    public void handleExceptionError() {
+        Toast toast = Toast.makeText(getActivity(), "Server error. Try again!", Toast.LENGTH_LONG);
+        toast.show();
+    }
+
     public void setupQuestionList(List<HashMap<Question, Answer>> questions) {
 
         questionListHashMap.addAll(questions);

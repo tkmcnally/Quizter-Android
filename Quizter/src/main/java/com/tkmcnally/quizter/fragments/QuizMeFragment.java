@@ -385,5 +385,14 @@ public class QuizMeFragment extends Fragment implements WebServiceCaller, Animat
 
     }
 
+    @Override
+    public void handleUnauthorizedError() {
+        ((NavDrawerActivity) getActivity()).handleUnauthorizedError();
+    }
 
+    @Override
+    public void handleExceptionError() {
+        Toast toast = Toast.makeText(getActivity(), "Server error. Try again!", Toast.LENGTH_LONG);
+        toast.show();
+    }
 }

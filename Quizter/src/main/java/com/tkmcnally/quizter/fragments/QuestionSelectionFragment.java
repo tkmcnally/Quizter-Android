@@ -12,12 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tkmcnally.quizter.Constants;
 import com.tkmcnally.quizter.R;
+import com.tkmcnally.quizter.activities.NavDrawerActivity;
 import com.tkmcnally.quizter.http.WebServiceCaller;
 import com.tkmcnally.quizter.http.WebService;
 import com.tkmcnally.quizter.adapters.ImageListAdapter;
@@ -131,6 +133,17 @@ public class QuestionSelectionFragment extends Fragment implements WebServiceCal
         Collections.reverse(tempList);
         questionList.addAll(tempList);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void handleUnauthorizedError() {
+        ((NavDrawerActivity) getActivity()).handleUnauthorizedError();
+    }
+
+    @Override
+    public void handleExceptionError() {
+        Toast toast = Toast.makeText(getActivity(), "Server error. Try again!", Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private void swapFragmentQuestionEdit(String textView) {

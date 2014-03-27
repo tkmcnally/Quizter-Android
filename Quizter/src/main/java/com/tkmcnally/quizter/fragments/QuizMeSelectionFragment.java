@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.gson.Gson;
@@ -214,5 +215,16 @@ public class QuizMeSelectionFragment extends Fragment implements WebServiceCalle
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuizMeFragment").commit();
+    }
+
+    @Override
+    public void handleUnauthorizedError() {
+        ((NavDrawerActivity) getActivity()).handleUnauthorizedError();
+    }
+
+    @Override
+    public void handleExceptionError() {
+        Toast toast = Toast.makeText(getActivity(), "Server error. Try again!", Toast.LENGTH_LONG);
+        toast.show();
     }
 }

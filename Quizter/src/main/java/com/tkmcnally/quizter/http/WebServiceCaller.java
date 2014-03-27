@@ -9,4 +9,8 @@ public interface WebServiceCaller {
 
     public void onPostWebServiceCall(String message);
 
+    public void handleUnauthorizedError();
+
+    public void handleExceptionError();
+
 }

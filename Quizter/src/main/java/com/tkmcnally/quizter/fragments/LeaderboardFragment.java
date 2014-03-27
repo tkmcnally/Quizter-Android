@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.gson.Gson;
@@ -86,5 +87,16 @@ public class LeaderboardFragment extends Fragment implements WebServiceCaller {
 
 
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void handleUnauthorizedError() {
+        ((NavDrawerActivity) getActivity()).handleUnauthorizedError();
+    }
+
+    @Override
+    public void handleExceptionError() {
+        Toast toast = Toast.makeText(getActivity(), "Server error. Try again!", Toast.LENGTH_LONG);
+        toast.show();
     }
 }

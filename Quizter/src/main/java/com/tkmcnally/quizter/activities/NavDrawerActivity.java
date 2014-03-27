@@ -334,4 +334,37 @@ public class NavDrawerActivity extends FragmentActivity {
     public void setUserData(UserData userData) {
         this.userData = userData;
     }
+
+    public void handleUnauthorizedError() {
+        View inflatedView = this.getLayoutInflater().inflate(R.layout.quizter_profile_not_set, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflatedView);
+        builder.setInverseBackgroundForced(true);
+        builder.setCancelable(true);
+
+        TextView  message = (TextView) inflatedView.findViewById(R.id.profile_setup_dialog_message);
+        message.setText("Your login has expired.");
+
+        Button okBtn =(Button)inflatedView.findViewById(R.id.profile_setup_ok_btn);
+        okBtn.setText("Ok");
+
+        Session.getActiveSession().closeAndClearTokenInformation();
+        final Intent intent = new Intent(this, QuizterActivity.class);
+        finish();
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.hide();
+                alertDialog.cancel();
+                startActivity(intent);
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.show();
+    }
 }

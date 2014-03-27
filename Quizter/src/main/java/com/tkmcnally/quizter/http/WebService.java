@@ -9,10 +9,12 @@ import com.google.gson.JsonObject;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
@@ -28,6 +30,8 @@ public class WebService extends AsyncTask<Object, Boolean, String>{
     private WebServiceCaller callingActivity;
     private ProgressDialog dialog;
 
+    private int STATUS_CODE = 0;
+
     public WebService(Activity activity, String loadingMessage) {
         this.dialog = new ProgressDialog(activity);
         this.dialog.setCancelable(false);
@@ -41,7 +45,6 @@ public class WebService extends AsyncTask<Object, Boolean, String>{
     }
 
     public String sendWaitJson(HashMap<String, String> jsonFields) throws Exception {
-
 
         //Map all my Map<String,String> attributes to JSON fields.
         JsonObject jsonObject = mapFields(jsonFields);
@@ -66,24 +69,28 @@ public class WebService extends AsyncTask<Object, Boolean, String>{
         HttpResponse response = httpClient.execute(httpPost);
         HttpEntity httpEntity = response.getEntity();
 
-        //Read incoming JSON into String.
-        InputStream inputStream = httpEntity.getContent();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line + "\n");
+        Log.d("Quizter", "STATUS: " + response.getStatusLine().getStatusCode());
+        int status_code = response.getStatusLine().getStatusCode();
+        String result = null;
+        if(status_code == 200) {
+            //Read incoming JSON into String.
+            InputStream inputStream = httpEntity.getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+
+            result = sb.toString();
+            result = result.replace(":\"[", ": [");
+            result = result.replace("]\"", "]");
+            result = result.replace("\\\"", "\"");
+
+            Log.d("quizter", "incoming json: " + result);
+
+            inputStream.close();
         }
-
-        String result = sb.toString();
-        result = result.replace(":\"[", ": [");
-        result = result.replace("]\"", "]");
-        result =  result.replace("\\\"", "\"");
-
-        Log.d("quizter", "incoming json: " + result);
-
-        inputStream.close();
-
         return result;
     }
 
@@ -116,7 +123,16 @@ public class WebService extends AsyncTask<Object, Boolean, String>{
     @Override
     protected void onPostExecute(String response) {
         try {
-            callingActivity.onPostWebServiceCall(response);
+            if(response != null) {
+                callingActivity.onPostWebServiceCall(response);
+            } else {
+                if(STATUS_CODE == HttpStatus.SC_UNAUTHORIZED) {
+                    callingActivity.handleUnauthorizedError();
+                } else {
+                    callingActivity.handleExceptionError();
+                }
+
+            }
         }
         catch(Exception e) {
             e.printStackTrace();
