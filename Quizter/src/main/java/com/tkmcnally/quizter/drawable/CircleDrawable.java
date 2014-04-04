@@ -1,4 +1,5 @@
 package com.tkmcnally.quizter.drawable;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -11,7 +12,7 @@ import android.graphics.drawable.Drawable;
 
 /**
  * Image with rounded corners
- *
+ * <p/>
  * You can find the original source here:
  * http://www.curious-creature.org/2012/12/11/android-recipe-1-image-with-rounded-corners/
  *
@@ -45,10 +46,10 @@ public class CircleDrawable extends Drawable {
         circleCenterX = bounds.width() / 2;
         circleCenterY = bounds.height() / 2;
 
-        if (bounds.width()>=bounds.height())
-            mRadus= bounds.width() / 2;
+        if (bounds.width() >= bounds.height())
+            mRadus = bounds.width() / 2;
         else
-            mRadus= bounds.height() / 2;
+            mRadus = bounds.height() / 2;
     }
 
     @Override

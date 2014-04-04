@@ -1,51 +1,28 @@
 package com.tkmcnally.quizter.fragments;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tkmcnally.quizter.R;
-import com.tkmcnally.quizter.activities.NavDrawerActivity;
 import com.tkmcnally.quizter.adapters.GoogleNowCardArrayAdapter;
-import com.tkmcnally.quizter.http.WebServiceCaller;
-import com.tkmcnally.quizter.models.now.GoogleNowCard;
-import com.tkmcnally.quizter.models.now.GoogleNowLabelCard;
-import com.tkmcnally.quizter.models.now.GoogleNowOverviewCard;
-import com.tkmcnally.quizter.models.now.GoogleNowOverviewListCard;
-import com.tkmcnally.quizter.models.quizter.Answer;
-import com.tkmcnally.quizter.models.quizter.Question;
-import com.tkmcnally.quizter.models.quizter.UserData;
-
-import org.w3c.dom.Text;
+import com.tkmcnally.quizter.view.models.GoogleNowLabelCard;
+import com.tkmcnally.quizter.view.models.GoogleNowOverviewCard;
+import com.tkmcnally.quizter.view.models.GoogleNowOverviewListCard;
+import com.tkmcnally.quizter.view.quizter.models.Answer;
+import com.tkmcnally.quizter.view.quizter.models.Question;
+import com.tkmcnally.quizter.view.quizter.models.UserData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -54,7 +31,7 @@ import it.gmariotti.cardslib.library.view.CardListView;
 /**
  * Created by Thomas on 3/19/14.
  */
-public class QuizOverviewFragment  extends Fragment {
+public class QuizOverviewFragment extends Fragment {
 
     private ArrayList<Card> cards;
     private GoogleNowCardArrayAdapter mCardArrayAdapter;
@@ -88,12 +65,12 @@ public class QuizOverviewFragment  extends Fragment {
             public void onClick(View v) {
                 HashMap<Integer, String> map = new HashMap<Integer, String>();
                 Arrays.sort(map.keySet().toArray());
-                Fragment fragment = new QuizMeFragment();
+                Fragment fragment = new QuizFragment();
 
                 fragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuizMeFragment").commit();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuizFragment").commit();
             }
         });
         finishButton = (Button) rootView.findViewById(R.id.finish_review);
@@ -110,15 +87,13 @@ public class QuizOverviewFragment  extends Fragment {
         });
 
 
-
-
         return rootView;
     }
 
     public void setupQuestionList() {
 
         Bundle bundle = getArguments();
-        if(bundle != null) {
+        if (bundle != null) {
             questionList = new ArrayList<HashMap<String, String>>();
             cards = new ArrayList<Card>();
 
@@ -142,7 +117,7 @@ public class QuizOverviewFragment  extends Fragment {
 
             int score = 0;
             JsonArray json_questions = (JsonArray) o.get("marked_questions");
-            for(int i = 0; i < json_questions.size(); i++) {
+            for (int i = 0; i < json_questions.size(); i++) {
                 JsonObject map = (JsonObject) json_questions.get(i);
 
                 GoogleNowOverviewListCard card = new GoogleNowOverviewListCard(this.getActivity());
@@ -154,10 +129,10 @@ public class QuizOverviewFragment  extends Fragment {
                 card.setIndex((cards.size() - 1) + "");
                 card.setType(2);
 
-                if("true".equals(map.get("correct_answer").getAsString())) {
+                if ("true".equals(map.get("correct_answer").getAsString())) {
                     score++;
                     card.setMarkIconID(R.drawable.check_mark);
-                    if("true".equals((map.get("already_answered").getAsString()))) {
+                    if ("true".equals((map.get("already_answered").getAsString()))) {
                         card.setAlreadyAnswered(true);
                     }
                 } else {
@@ -175,15 +150,13 @@ public class QuizOverviewFragment  extends Fragment {
         }
 
 
-
-        mCardArrayAdapter = new GoogleNowCardArrayAdapter(getActivity(),cards);
+        mCardArrayAdapter = new GoogleNowCardArrayAdapter(getActivity(), cards);
         mCardArrayAdapter.setInnerViewTypeCount(3);
 
-        if (questionListView != null){
+        if (questionListView != null) {
             questionListView.setAdapter(mCardArrayAdapter);
         }
     }
-
 
 
 }

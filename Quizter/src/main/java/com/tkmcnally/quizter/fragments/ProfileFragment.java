@@ -27,20 +27,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.tkmcnally.quizter.Constants;
 import com.tkmcnally.quizter.R;
-import com.tkmcnally.quizter.activities.NavDrawerActivity;
 import com.tkmcnally.quizter.Util;
-import com.tkmcnally.quizter.http.WebService;
-import com.tkmcnally.quizter.http.WebServiceCaller;
-import com.tkmcnally.quizter.models.now.GoogleNowLabelCard;
-import com.tkmcnally.quizter.models.quizter.Answer;
-import com.tkmcnally.quizter.models.now.GoogleNowCard;
-import com.tkmcnally.quizter.models.now.profile.Profile;
-import com.tkmcnally.quizter.models.now.profile.ProfilePhoto;
-import com.tkmcnally.quizter.models.now.profile.ProfileQuestions;
-import com.tkmcnally.quizter.models.quizter.Question;
-import com.tkmcnally.quizter.models.quizter.UserData;
+import com.tkmcnally.quizter.activities.NavDrawerActivity;
 import com.tkmcnally.quizter.adapters.GoogleNowCardArrayAdapter;
-import com.tkmcnally.quizter.models.now.GoogleNowProfileCard;
+import com.tkmcnally.quizter.http.WebServiceCaller;
+import com.tkmcnally.quizter.http.WebServiceCallerImpl;
+import com.tkmcnally.quizter.view.models.GoogleNowCard;
+import com.tkmcnally.quizter.view.models.GoogleNowLabelCard;
+import com.tkmcnally.quizter.view.models.GoogleNowProfileCard;
+import com.tkmcnally.quizter.view.models.profile.Profile;
+import com.tkmcnally.quizter.view.models.profile.ProfilePhoto;
+import com.tkmcnally.quizter.view.models.profile.ProfileQuestions;
+import com.tkmcnally.quizter.view.quizter.models.Answer;
+import com.tkmcnally.quizter.view.quizter.models.Question;
+import com.tkmcnally.quizter.view.quizter.models.UserData;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -74,109 +74,14 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
     private ProfileFragment fragment;
     private GoogleNowCardArrayAdapter mCardArrayAdapter;
     private Bundle bundle;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 
-        if(savedInstanceState != null) {
-            bundle = savedInstanceState;
-            Log.d("Quizter", "bundle was saved!");
-        } else {
-            bundle = getArguments();
-        }
-        View view = inflater.inflate(R.layout.activity_register, container, false);
-
-        ActionBar ab = getActivity().getActionBar(); //needs  import android.app.ActionBar;
-        ab.setTitle("Quizter");
-        ab.setSubtitle("Dashboard");
-        ab.setDisplayHomeAsUpEnabled(true);
-
-        //Log.d("Quizter", "Density:" +  Util.getPictureSize(getResources()));
-        typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
-
-        questionListHashMap = new ArrayList<HashMap<Question, Answer>>();
-
-        questionListView = (CardListView)  view.findViewById(R.id.questionListView);
-
-        fragment = this;
-
-        saveButton = (Button) view.findViewById(R.id.saveProfileButton);
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            HashMap<String, String> jsonFields = new HashMap<String, String>();
-            jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
-            jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
-            jsonFields.put(Constants.STRING_URL_PATH, Constants.UPDATE_QUESTIONS_PATH);
-
-            List<JsonObject> jsonQuestions = new ArrayList<JsonObject>();
-            try {
-                for(HashMap<Question, Answer> qa: questionListHashMap) {
-                    for(Question q: qa.keySet()) {
-                        JsonObject object = new JsonObject();
-                        String q_filtered = q.getQuestion();
-                        q_filtered = q_filtered.replace("'", "\'");
-                        String a_filtered =  qa.get(q).getAnswer();
-                        a_filtered = a_filtered.replace("'", "\'");
-
-                        object.addProperty(Constants.STRING_QUESTION, q_filtered);
-                        object.addProperty(Constants.STRING_ANSWER, a_filtered);
-                        jsonQuestions.add(object);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-
-            String questions = gson.toJson(jsonQuestions);
-            //Log.d("quizter", questions);
-            jsonFields.put(Constants.STRING_UPDATED_QUESTIONS, questions);
-
-            WebService ws = new WebService(getActivity(), "Saving profile...");
-            ws.execute(jsonFields, fragment);
-            }
-        });
-
-        if(bundle != null) {
-
-            Profile profile = (Profile) bundle.getParcelable("profile");
-            ProfilePhoto photo = (ProfilePhoto) bundle.getParcelable("photo");
-            ProfileQuestions questions = (ProfileQuestions) bundle.getSerializable("questions");
-
-            user = new UserData();
-            user.setDate_created(profile.getDateCreated());
-            user.setName(profile.getName());
-            user.setScore(profile.getScore());
-            user.setPhoto_url(profile.getPhoto_url());
-
-            setupQuestionList(questions.getQuestions());
-             if(bundle.getString("originalQuestion") != null) {
-                replaceQuestion(bundle.getString("originalQuestion"), bundle.getString("question"), bundle.getString("answer"), bundle.getInt("position"));
-             }
-
-            ((LinearLayout) view.findViewById(R.id.containerRegisterActivity)).setVisibility(0);
-
-        } else {
-
-            HashMap<String, String> jsonFields = new HashMap<String, String>();
-            jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
-            jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
-            jsonFields.put(Constants.STRING_URL_PATH, Constants.TESTING_API_PATH);
-
-            WebService ws = new WebService(getActivity(), "Fetching profile...");
-            ws.execute(jsonFields, this);
-        }
-
-        return view;
-    }
+    private Activity mActivity;
 
     @Override
     public void onPostWebServiceCall(String tempString) {
-        if(tempString != null) {
-            Type type = new TypeToken<UserData>(){}.getType();
+        if (tempString != null) {
+            Type type = new TypeToken<UserData>() {
+            }.getType();
             UserData jsonObject = new Gson().fromJson(tempString, type);
             setupQuestionList(jsonObject);
             user = jsonObject;
@@ -217,8 +122,8 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         labelCard.init();
         cards.add(labelCard);
 
-        for(HashMap<Question, Answer> map: questionListHashMap) {
-            for(Question q: map.keySet()) {
+        for (HashMap<Question, Answer> map : questionListHashMap) {
+            for (Question q : map.keySet()) {
                 GoogleNowCard card = new GoogleNowCard(this.getActivity());
                 card.setQuestion(q);
                 card.setAnswer(map.get(q));
@@ -231,28 +136,30 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             }
         }
 
-        mCardArrayAdapter = new GoogleNowCardArrayAdapter(getActivity(),cards);
+        mCardArrayAdapter = new GoogleNowCardArrayAdapter(getActivity(), cards);
         mCardArrayAdapter.setInnerViewTypeCount(3);
 
-        if (questionListView != null){
+        if (questionListView != null) {
             questionListView.setAdapter(mCardArrayAdapter);
         }
     }
+
     public void setupQuestionList(UserData user) {
 
         questionListHashMap.clear();
 
         List<HashMap<String, String>> questions = user.getQuestions();
-        for(HashMap<String, String> h: questions) {
+        for (HashMap<String, String> h : questions) {
             Question q = new Question(h.get(Constants.STRING_QUESTION));
             Answer a = new Answer(h.get(Constants.STRING_ANSWER));
             HashMap<Question, Answer> qa = new HashMap<Question, Answer>();
-            qa.put(q,a);
+            qa.put(q, a);
             questionListHashMap.add(qa);
         }
 
         cards = new ArrayList<Card>();
 
+        Log.d("Quizter", "Activity: " + this.getActivity());
         profileCard = new GoogleNowProfileCard(this.getActivity());
         profileCard.setName(user.getName());
         profileCard.setScore(user.getScore());
@@ -268,8 +175,8 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         labelCard.init();
         cards.add(labelCard);
 
-        for(HashMap<Question, Answer> map: questionListHashMap) {
-            for(Question q: map.keySet()) {
+        for (HashMap<Question, Answer> map : questionListHashMap) {
+            for (Question q : map.keySet()) {
                 GoogleNowCard card = new GoogleNowCard(this.getActivity());
                 card.setQuestion(q);
                 card.setAnswer(map.get(q));
@@ -281,10 +188,10 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
                 cards.add(card);
             }
         }
-        mCardArrayAdapter = new GoogleNowCardArrayAdapter(getActivity(),cards);
+        mCardArrayAdapter = new GoogleNowCardArrayAdapter(getActivity(), cards);
         mCardArrayAdapter.setInnerViewTypeCount(3);
 
-        if (questionListView!=null){
+        if (questionListView != null) {
             questionListView.setAdapter(mCardArrayAdapter);
         }
     }
@@ -316,10 +223,10 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
 
         fragment.setArguments(args);
 
-        onSaveInstanceState(args);
+
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuestionModifyFragment").commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, "QuestionModifyFragment").addToBackStack("profileBackStack").commit();
 
     }
 
@@ -328,9 +235,9 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         List<HashMap<Question, Answer>> temp = new ArrayList<HashMap<Question, Answer>>();
         temp.addAll(questionListHashMap);
 
-        for(HashMap<Question, Answer> qa: temp) {
-            for(Question q: qa.keySet()) {
-                if(q.getQuestion().toString().equals(originalQuestion) && temp.indexOf(qa) == position){
+        for (HashMap<Question, Answer> qa : temp) {
+            for (Question q : qa.keySet()) {
+                if (q.getQuestion().toString().equals(originalQuestion) && temp.indexOf(qa) == position) {
                     Question quest = new Question(question);
                     Answer ans = new Answer(answer);
                     questionListHashMap.get(questionListHashMap.indexOf(qa)).clear();
@@ -369,15 +276,15 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
     }
 
     public Card.OnSwipeListener swipeListener() {
-       return new Card.OnSwipeListener() {
+        return new Card.OnSwipeListener() {
             @Override
             public void onSwipe(Card card) {
                 cards.add(card);
-                for(int i = 2; i < cards.size(); i++) {
+                for (int i = 2; i < cards.size(); i++) {
                     ((GoogleNowCard) cards.get(i)).setIndex((i - 1) + "");
                 }
                 updateQuestionHashList();
-           }
+            }
         };
     }
 
@@ -393,45 +300,133 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
         };
     }
 
-    /**
-     * Broadcast for image downloaded by CardThumbnail
-     */
-    private class ImageBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle extras = intent.getExtras();
-            if (extras!=null){
-                boolean result = extras.getBoolean(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED_EXTRA_RESULT);
-                String id = extras.getString(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED_EXTRA_CARD_ID);
-                boolean processError = extras.getBoolean(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED_EXTRA_ERROR_LOADING);
-                if (result){
-                    if (profileCard != null && id!=null && id.equalsIgnoreCase(profileCard.getId())){
-                        createBundle();
-                    }
-                }
-            }
-        }
-    }
-
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (mReceiver==null)
+        if (mReceiver == null)
             mReceiver = new ImageBroadcastReceiver();
-        activity.registerReceiver(mReceiver,new IntentFilter(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED));
+        activity.registerReceiver(mReceiver, new IntentFilter(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED));
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        if(((NavDrawerActivity)getActivity()).profileBundle != null) {
+            bundle = ((NavDrawerActivity)getActivity()).profileBundle;
+
+        } else if (savedInstanceState != null) {
+            bundle = savedInstanceState;
+        } else {
+            bundle = getArguments();
+        }
+
+        Log.d("Quizter", "profile fragment: " + bundle);
+        View view = inflater.inflate(R.layout.activity_register, container, false);
+
+        ActionBar ab = getActivity().getActionBar(); //needs  import android.app.ActionBar;
+        ab.setTitle("Quizter");
+        ab.setSubtitle("Dashboard");
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
+
+        questionListHashMap = new ArrayList<HashMap<Question, Answer>>();
+
+        questionListView = (CardListView) view.findViewById(R.id.questionListView);
+
+        fragment = this;
+
+        saveButton = (Button) view.findViewById(R.id.saveProfileButton);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HashMap<String, Object> jsonFields = new HashMap<String, Object>();
+                jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
+                jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
+                jsonFields.put(Constants.STRING_URL_PATH, Constants.API.UPDATE_PROFILE_PATH);
+
+                List<JsonObject> jsonQuestions = new ArrayList<JsonObject>();
+                try {
+                    for (HashMap<Question, Answer> qa : questionListHashMap) {
+                        for (Question q : qa.keySet()) {
+                            JsonObject object = new JsonObject();
+                            String q_filtered = q.getQuestion();
+                            q_filtered = q_filtered.replace("'", "\'");
+                            String a_filtered = qa.get(q).getAnswer();
+                            a_filtered = a_filtered.replace("'", "\'");
+
+                            object.addProperty(Constants.STRING_QUESTION, q_filtered);
+                            object.addProperty(Constants.STRING_ANSWER, a_filtered);
+                            jsonQuestions.add(object.getAsJsonObject());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+                //  String questions = gson.toJson(jsonQuestions);
+                jsonFields.put(Constants.STRING_UPDATED_QUESTIONS, gson.toJson(jsonQuestions));
+
+                WebServiceCallerImpl ws = new WebServiceCallerImpl(getActivity(), "Saving profile...");
+                ws.execute(jsonFields, fragment);
+            }
+        });
+
+        if (bundle != null) {
+
+            Profile profile = (Profile) bundle.getParcelable("profile");
+            ProfilePhoto photo = (ProfilePhoto) bundle.getParcelable("photo");
+            ProfileQuestions questions = (ProfileQuestions) bundle.getSerializable("questions");
+
+            user = new UserData();
+            user.setDate_created(profile.getDateCreated());
+            user.setName(profile.getName());
+            user.setScore(profile.getScore());
+            user.setPhoto_url(profile.getPhoto_url());
+
+            setupQuestionList(questions.getQuestions());
+            if (bundle.getString("originalQuestion") != null) {
+                replaceQuestion(bundle.getString("originalQuestion"), bundle.getString("question"), bundle.getString("answer"), bundle.getInt("position"));
+            }
+
+            ((LinearLayout) view.findViewById(R.id.containerRegisterActivity)).setVisibility(0);
+
+        } else {
+
+            HashMap<String, String> jsonFields = new HashMap<String, String>();
+            jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
+            jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
+            jsonFields.put(Constants.STRING_URL_PATH, Constants.API.GET_PROFILE_PATH);
+
+            WebServiceCallerImpl ws = new WebServiceCallerImpl(getActivity(), "Fetching profile...");
+            Log.d("Quizter", "execute called: " + bundle);
+            ws.execute(jsonFields, this);
+        }
+
+        return view;
+    }
+
+    @Override
+    public void onRestoreInstanceState()
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if (mReceiver!=null)
+        if (mReceiver != null)
             getActivity().unregisterReceiver(mReceiver);
     }
 
     public void updateQuestionHashList() {
-        for(int i = 2; i < cards.size(); i++) {
+        for (int i = 2; i < cards.size(); i++) {
             String question = ((GoogleNowCard) cards.get(i)).getQuestion().getQuestion();
             String answer = ((GoogleNowCard) cards.get(i)).getAnswer().getAnswer();
 
@@ -441,24 +436,33 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
     }
 
     public boolean hasSetupProfile() {
-        if("false".equals(user.getSetup_profile())){
+        if ("false".equals(user.getSetup_profile())) {
             return false;
         } else {
             return true;
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle bundle) {
-        super.onSaveInstanceState(bundle);
+    /**
+     * Broadcast for image downloaded by CardThumbnail
+     */
+    private class ImageBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                boolean result = extras.getBoolean(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED_EXTRA_RESULT);
+                String id = extras.getString(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED_EXTRA_CARD_ID);
+                boolean processError = extras.getBoolean(it.gmariotti.cardslib.library.Constants.IntentManager.INTENT_ACTION_IMAGE_DOWNLOADED_EXTRA_ERROR_LOADING);
+                if (result) {
+                    if (profileCard != null && id != null && id.equalsIgnoreCase(profileCard.getId())) {
+                        createBundle();
+                    }
+                }
+            }
+        }
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        this.bundle = savedInstanceState;
-        super.onActivityCreated(savedInstanceState);
-        Log.d("Quizter", "Onactivity created");
-
-    }
 
 }

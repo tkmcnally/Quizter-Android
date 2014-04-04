@@ -1,10 +1,8 @@
 package com.tkmcnally.quizter.fragments;
 
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +18,10 @@ import com.google.gson.reflect.TypeToken;
 import com.tkmcnally.quizter.Constants;
 import com.tkmcnally.quizter.R;
 import com.tkmcnally.quizter.activities.NavDrawerActivity;
-import com.tkmcnally.quizter.http.WebService;
+import com.tkmcnally.quizter.adapters.LeaderboardBaseAdapter;
 import com.tkmcnally.quizter.http.WebServiceCaller;
-import com.tkmcnally.quizter.adapters.LeaderboardListAdapter;
-import com.tkmcnally.quizter.models.now.profile.ProfilePhoto;
-import com.tkmcnally.quizter.models.quizter.ScoreData;
+import com.tkmcnally.quizter.http.WebServiceCallerImpl;
+import com.tkmcnally.quizter.view.quizter.models.ScoreData;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ public class LeaderboardFragment extends Fragment implements WebServiceCaller {
 
     private ListView leaderboardListView;
     private ArrayList<ScoreData> scores;
-    private LeaderboardListAdapter adapter;
+    private LeaderboardBaseAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +45,7 @@ public class LeaderboardFragment extends Fragment implements WebServiceCaller {
         leaderboardListView = (ListView) view.findViewById(R.id.leaderboardList);
         scores = new ArrayList<ScoreData>();
 
-        adapter = new LeaderboardListAdapter(this.getActivity(), R.layout.leaderboard_list_items, R.id.leaderboard_list_item_rank, R.id.leaderboard_list_item_picture, R.id.leaderboard_list_item_name,
+        adapter = new LeaderboardBaseAdapter(this.getActivity(), R.layout.leaderboard_list_items, R.id.leaderboard_list_item_rank, R.id.leaderboard_list_item_picture, R.id.leaderboard_list_item_name,
                 R.id.leaderboard_list_item_score, scores);
         leaderboardListView.setAdapter(adapter);
 
@@ -56,9 +53,9 @@ public class LeaderboardFragment extends Fragment implements WebServiceCaller {
 
         HashMap<String, String> jsonFields = new HashMap<String, String>();
         jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
-        jsonFields.put(Constants.STRING_URL_PATH, Constants.LEADERBOARD_API_PATH);
+        jsonFields.put(Constants.STRING_URL_PATH, Constants.API.GET_LEADERBOARD_PATH);
 
-        WebService ws = new WebService(getActivity(), "Loading leaderboard...");
+        WebServiceCallerImpl ws = new WebServiceCallerImpl(getActivity(), "Loading leaderboard...");
         ws.execute(jsonFields, this);
 
         return view;
@@ -67,7 +64,8 @@ public class LeaderboardFragment extends Fragment implements WebServiceCaller {
 
     @Override
     public void onPostWebServiceCall(String jsonString) {
-        Type type = new TypeToken<JsonObject>(){}.getType();
+        Type type = new TypeToken<JsonObject>() {
+        }.getType();
         JsonObject jsonObject = new Gson().fromJson(jsonString, type);
 
         scores.clear();

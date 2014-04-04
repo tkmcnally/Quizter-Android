@@ -2,8 +2,8 @@ package com.tkmcnally.quizter.fragments;
 
 import android.app.ActionBar;
 import android.graphics.Typeface;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +50,12 @@ public class QuestionEditFragment extends Fragment {
 
         discardButton = (Button) view.findViewById(R.id.questionEditDiscard);
         discardButton.setTypeface(typeface);
-        discardButton.setOnClickListener( new View.OnClickListener() {
+        discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle args = bundle;
 
-                Fragment fragment = new QuestionSelectionFragment();
+                Fragment fragment = new DefaultQuestionsFragment();
                 fragment.setArguments(args);
 
                 getFragmentManager().popBackStack();
@@ -68,7 +68,7 @@ public class QuestionEditFragment extends Fragment {
 
         submitButton = (Button) view.findViewById(R.id.questionEditSubmit);
         submitButton.setTypeface(typeface);
-        submitButton.setOnClickListener( new View.OnClickListener() {
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

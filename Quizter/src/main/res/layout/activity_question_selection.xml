@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:layout_marginTop="?android:attr/actionBarSize"
-        class="com.tkmcnally.quizter.fragments.QuestionSelectionFragment" ></fragment>
+        class="com.tkmcnally.quizter.fragments.DefaultQuestionsFragment" ></fragment>
 
     <fragment
         android:id="@+id/answerFragment"
