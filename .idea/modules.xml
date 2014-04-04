@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Quizter/Quizter.iml" filepath="$PROJECT_DIR$/Quizter/Quizter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/QuizterProject.iml" filepath="$PROJECT_DIR$/QuizterProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/facebook/build/source/buildConfig/buildConfig.iml" filepath="$PROJECT_DIR$/libraries/facebook/build/source/buildConfig/buildConfig.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/facebook/facebook.iml" filepath="$PROJECT_DIR$/libraries/facebook/facebook.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/cardslib-master/library/library.iml" filepath="$PROJECT_DIR$/libraries/cardslib-master/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/cardslib-master/demo/extras/src/main/main.iml" filepath="$PROJECT_DIR$/libraries/cardslib-master/demo/extras/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Quizter/src/main/main1.iml" filepath="$PROJECT_DIR$/Quizter/src/main/main1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/cardslib-master/demo/stock/src/main/main2.iml" filepath="$PROJECT_DIR$/libraries/cardslib-master/demo/stock/src/main/main2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/cardslib-master/library/src/main/main3.iml" filepath="$PROJECT_DIR$/libraries/cardslib-master/library/src/main/main3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/facebook/build/source/r/r.iml" filepath="$PROJECT_DIR$/libraries/facebook/build/source/r/r.iml" />
     </modules>
   </component>
 </project>
