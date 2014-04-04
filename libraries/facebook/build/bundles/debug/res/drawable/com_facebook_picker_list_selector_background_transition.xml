@@ -18,4 +18,4 @@
     <item android:drawable="@drawable/com_facebook_picker_list_pressed"  />
     <item android:drawable="@drawable/com_facebook_picker_list_longpressed"  />
 </transition>
-<!-- From: file:/C:/Dev/QuizterProject/libraries/facebook/res/drawable/com_facebook_picker_list_selector_background_transition.xml -->
+<!-- From: file:/Users/missionary/Documents/QuizterAndroid/Quizter-Android/libraries/facebook/res/drawable/com_facebook_picker_list_selector_background_transition.xml -->

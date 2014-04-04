@@ -25,6 +25,6 @@ android {
 dependencies {
     compile project(':libraries:facebook')
     compile project(':libraries:cardslib-master:library')
-    compile files('C:/Dev/QuizterProject/libs/gson-2.2.4.jar')
-    compile files('C:/Dev/QuizterProject/libs/universal-image-loader-1.9.1-with-sources.jar')
+    compile files('../libs/gson-2.2.4.jar')
+    compile files('../libs/universal-image-loader-1.9.1-with-sources.jar')
 }

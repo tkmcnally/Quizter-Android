@@ -16,7 +16,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -34,7 +33,6 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tkmcnally.quizter.R;
 import com.tkmcnally.quizter.adapters.NavDrawerBaseAdapter;
 import com.tkmcnally.quizter.fragments.LeaderboardFragment;
@@ -43,8 +41,6 @@ import com.tkmcnally.quizter.fragments.QuestionModifyFragment;
 import com.tkmcnally.quizter.fragments.QuizSelectionFragment;
 import com.tkmcnally.quizter.receiver.ConnectionChangeReceiver;
 import com.tkmcnally.quizter.view.quizter.models.UserData;
-
-import java.sql.Connection;
 
 /**
  * Created by Thomas on 1/10/14.
@@ -91,11 +87,7 @@ public class NavDrawerActivity extends FragmentActivity {
 
         setUpView();
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-        if (activeNetInfo != null && activeNetInfo.isConnected()) {
-            setDefaultFragment(0);
-        }
+
 
     }
 
@@ -220,6 +212,24 @@ public class NavDrawerActivity extends FragmentActivity {
     }
 
     @Override
+    public void onStart() {
+        Log.d("Quizter", "onStart called! ");
+
+        if(Session.getActiveSession() == null) {
+
+            Log.d("Quizter", "profile fragment: " + profileBundle + "\n session: " + Session.getActiveSession());
+
+        }
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("Quizter", "onPause called! ");
+        super.onPause();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
@@ -304,6 +314,7 @@ public class NavDrawerActivity extends FragmentActivity {
     }
 
     public void storeProfileBundle(Bundle profileBundle) {
+        Log.d("Quizter", "stored profile!");
         this.profileBundle = profileBundle;
     }
 
@@ -461,5 +472,13 @@ public class NavDrawerActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetInfo != null && activeNetInfo.isConnected()) {
+            setDefaultFragment(0);
+        }
+    }
 }

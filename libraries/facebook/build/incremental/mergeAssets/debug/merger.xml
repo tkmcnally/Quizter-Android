@@ -2,10 +2,10 @@
 <merger>
 
     <dataSet config="main" >
-        <source path="C:\Dev\QuizterProject\libraries\facebook\src\main\assets" />
+        <source path="/Users/missionary/Documents/QuizterAndroid/Quizter-Android/libraries/facebook/src/main/assets" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="C:\Dev\QuizterProject\libraries\facebook\src\debug\assets" />
+        <source path="/Users/missionary/Documents/QuizterAndroid/Quizter-Android/libraries/facebook/src/debug/assets" />
     </dataSet>
 
 </merger>

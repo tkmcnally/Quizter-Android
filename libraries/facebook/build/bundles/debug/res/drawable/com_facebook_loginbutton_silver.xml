@@ -21,4 +21,4 @@
           android:drawable="@drawable/com_facebook_button_grey_focused" />
     <item android:drawable="@drawable/com_facebook_button_grey_normal" />
 </selector>
-<!-- From: file:/C:/Dev/QuizterProject/libraries/facebook/res/drawable/com_facebook_loginbutton_silver.xml -->
+<!-- From: file:/Users/missionary/Documents/QuizterAndroid/Quizter-Android/libraries/facebook/res/drawable/com_facebook_loginbutton_silver.xml -->

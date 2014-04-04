@@ -29,6 +29,7 @@ import com.tkmcnally.quizter.Constants;
 import com.tkmcnally.quizter.R;
 import com.tkmcnally.quizter.Util;
 import com.tkmcnally.quizter.activities.NavDrawerActivity;
+import com.tkmcnally.quizter.activities.WelcomeActivity;
 import com.tkmcnally.quizter.adapters.GoogleNowCardArrayAdapter;
 import com.tkmcnally.quizter.http.WebServiceCaller;
 import com.tkmcnally.quizter.http.WebServiceCallerImpl;
@@ -321,101 +322,111 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
             bundle = getArguments();
         }
 
-        Log.d("Quizter", "profile fragment: " + bundle);
         View view = inflater.inflate(R.layout.activity_register, container, false);
 
-        ActionBar ab = getActivity().getActionBar(); //needs  import android.app.ActionBar;
-        ab.setTitle("Quizter");
-        ab.setSubtitle("Dashboard");
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (Session.getActiveSession() != null) {
 
-        typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
+            ActionBar ab = getActivity().getActionBar(); //needs  import android.app.ActionBar;
+            ab.setTitle("Quizter");
+            ab.setSubtitle("Dashboard");
+            ab.setDisplayHomeAsUpEnabled(true);
 
-        questionListHashMap = new ArrayList<HashMap<Question, Answer>>();
+            typeface = Typeface.create("sans-serif-light", Typeface.NORMAL);
 
-        questionListView = (CardListView) view.findViewById(R.id.questionListView);
+            questionListHashMap = new ArrayList<HashMap<Question, Answer>>();
 
-        fragment = this;
+            questionListView = (CardListView) view.findViewById(R.id.questionListView);
 
-        saveButton = (Button) view.findViewById(R.id.saveProfileButton);
+            fragment = this;
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HashMap<String, Object> jsonFields = new HashMap<String, Object>();
-                jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
-                jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
-                jsonFields.put(Constants.STRING_URL_PATH, Constants.API.UPDATE_PROFILE_PATH);
+            saveButton = (Button) view.findViewById(R.id.saveProfileButton);
 
-                List<JsonObject> jsonQuestions = new ArrayList<JsonObject>();
-                try {
-                    for (HashMap<Question, Answer> qa : questionListHashMap) {
-                        for (Question q : qa.keySet()) {
-                            JsonObject object = new JsonObject();
-                            String q_filtered = q.getQuestion();
-                            q_filtered = q_filtered.replace("'", "\'");
-                            String a_filtered = qa.get(q).getAnswer();
-                            a_filtered = a_filtered.replace("'", "\'");
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    HashMap<String, Object> jsonFields = new HashMap<String, Object>();
+                    jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
+                    jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
+                    jsonFields.put(Constants.STRING_URL_PATH, Constants.API.UPDATE_PROFILE_PATH);
 
-                            object.addProperty(Constants.STRING_QUESTION, q_filtered);
-                            object.addProperty(Constants.STRING_ANSWER, a_filtered);
-                            jsonQuestions.add(object.getAsJsonObject());
+                    List<JsonObject> jsonQuestions = new ArrayList<JsonObject>();
+                    try {
+                        for (HashMap<Question, Answer> qa : questionListHashMap) {
+                            for (Question q : qa.keySet()) {
+                                JsonObject object = new JsonObject();
+                                String q_filtered = q.getQuestion();
+                                q_filtered = q_filtered.replace("'", "\'");
+                                String a_filtered = qa.get(q).getAnswer();
+                                a_filtered = a_filtered.replace("'", "\'");
+
+                                object.addProperty(Constants.STRING_QUESTION, q_filtered);
+                                object.addProperty(Constants.STRING_ANSWER, a_filtered);
+                                jsonQuestions.add(object.getAsJsonObject());
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                    Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+                    //  String questions = gson.toJson(jsonQuestions);
+                    jsonFields.put(Constants.STRING_UPDATED_QUESTIONS, gson.toJson(jsonQuestions));
+
+                    WebServiceCallerImpl ws = new WebServiceCallerImpl(getActivity(), "Saving profile...");
+                    ws.execute(jsonFields, fragment);
+                }
+            });
+
+            if (bundle != null) {
+
+                Profile profile = (Profile) bundle.getParcelable("profile");
+                ProfilePhoto photo = (ProfilePhoto) bundle.getParcelable("photo");
+                ProfileQuestions questions = (ProfileQuestions) bundle.getSerializable("questions");
+
+
+                Log.d("Quizter", "bundle: " + bundle + " size: " + bundle.size() + "profile: " + profile + " photo: " + photo + " questions: " + questions);
+
+                user = new UserData();
+                user.setDate_created(profile.getDateCreated());
+                user.setName(profile.getName());
+                user.setScore(profile.getScore());
+                user.setPhoto_url(profile.getPhoto_url());
+
+                setupQuestionList(questions.getQuestions());
+                if (bundle.getString("originalQuestion") != null) {
+                    replaceQuestion(bundle.getString("originalQuestion"), bundle.getString("question"), bundle.getString("answer"), bundle.getInt("position"));
                 }
 
-                Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+                ((LinearLayout) view.findViewById(R.id.containerRegisterActivity)).setVisibility(0);
 
-                //  String questions = gson.toJson(jsonQuestions);
-                jsonFields.put(Constants.STRING_UPDATED_QUESTIONS, gson.toJson(jsonQuestions));
+            } else {
 
-                WebServiceCallerImpl ws = new WebServiceCallerImpl(getActivity(), "Saving profile...");
-                ws.execute(jsonFields, fragment);
+                HashMap<String, String> jsonFields = new HashMap<String, String>();
+                jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
+                jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
+                jsonFields.put(Constants.STRING_URL_PATH, Constants.API.GET_PROFILE_PATH);
+
+                WebServiceCallerImpl ws = new WebServiceCallerImpl(getActivity(), "Fetching profile...");
+                Log.d("Quizter", "execute called: " + bundle);
+                ws.execute(jsonFields, this);
             }
-        });
-
-        if (bundle != null) {
-
-            Profile profile = (Profile) bundle.getParcelable("profile");
-            ProfilePhoto photo = (ProfilePhoto) bundle.getParcelable("photo");
-            ProfileQuestions questions = (ProfileQuestions) bundle.getSerializable("questions");
-
-            user = new UserData();
-            user.setDate_created(profile.getDateCreated());
-            user.setName(profile.getName());
-            user.setScore(profile.getScore());
-            user.setPhoto_url(profile.getPhoto_url());
-
-            setupQuestionList(questions.getQuestions());
-            if (bundle.getString("originalQuestion") != null) {
-                replaceQuestion(bundle.getString("originalQuestion"), bundle.getString("question"), bundle.getString("answer"), bundle.getInt("position"));
-            }
-
-            ((LinearLayout) view.findViewById(R.id.containerRegisterActivity)).setVisibility(0);
-
-        } else {
-
-            HashMap<String, String> jsonFields = new HashMap<String, String>();
-            jsonFields.put(Constants.STRING_ACCESS_TOKEN, Session.getActiveSession().getAccessToken());
-            jsonFields.put(Constants.STRING_DENSITY, Util.getPictureSize(getResources()));
-            jsonFields.put(Constants.STRING_URL_PATH, Constants.API.GET_PROFILE_PATH);
-
-            WebServiceCallerImpl ws = new WebServiceCallerImpl(getActivity(), "Fetching profile...");
-            Log.d("Quizter", "execute called: " + bundle);
-            ws.execute(jsonFields, this);
         }
 
         return view;
     }
 
     @Override
-    public void onRestoreInstanceState()
+    public void onSaveInstanceState(Bundle bundleTwo) {
+        Log.d("Quizter", "onSaveInstanceSate has been called!: " + bundle);
+        super.onSaveInstanceState(bundle);
+    }
 
     @Override
-    public void onSaveInstanceState(Bundle bundle) {
-        super.onSaveInstanceState(bundle);
+    public void onActivityCreated(Bundle bundle) {
+        Log.d("Quizter", "onActivityCreated has been called!: " + bundle);
+        super.onActivityCreated(bundle);
+
     }
 
     @Override
@@ -461,6 +472,16 @@ public class ProfileFragment extends Fragment implements WebServiceCaller {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(Session.getActiveSession() == null) {
+            Intent intent = new Intent(this.getActivity(), WelcomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 
